@@ -55,22 +55,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   int currentPageIndex = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  final List<String> entries = <String>['A', 'B', 'C', 'D', 'E'];
-  final List<int> colorCodes = <int>[600, 500, 100, 100, 100];
+  final List<String> entries = <String>['1', '2', '3', '4', '5', '6', '7'];
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +77,19 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: Badge(
+              child: Icon(Icons.notifications_outlined),
+            ),
+            tooltip: 'Inbox',
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Inbox っていうラベルつけれんかった')),
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -100,8 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
           itemBuilder: (BuildContext context, int index) {
             return Container(
               height: 200,
-              color: Colors.amber[colorCodes[index]],
-              child: Center(child: Text('Entry ${entries[index]}')),
+              child: Center(child: Image.asset("images/image${entries[index]}.jpg")),
             );
           },
           separatorBuilder: (BuildContext context, int index) => const Divider(
@@ -109,11 +108,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         )
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
           setState(() {
@@ -127,11 +121,6 @@ class _MyHomePageState extends State<MyHomePage> {
             selectedIcon: Icon(Icons.home),
             icon: Icon(Icons.home_outlined),
             label: 'Home',
-          ),
-          NavigationDestination(
-            selectedIcon: Badge(child: Icon(Icons.notifications_sharp)),
-            icon: Badge(child: Icon(Icons.notifications_outlined)),
-            label: 'Inbox',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.coffee),
