@@ -167,7 +167,7 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  final List<String> entries = <String>['1', '2', '3', '4', '5', '6', '7'];
+  final List<String> entries = <String>['6', '7'];
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +200,7 @@ class ShopsScreen extends StatefulWidget {
 }
 
 class _ShopsScreenState extends State<ShopsScreen> {
-  final List<String> entries = <String>['1', '2', '3', '4', '5', '6', '7'];
+  final List<String> entries = <String>['3', '4', '5'];
 
   @override
   Widget build(BuildContext context) {
