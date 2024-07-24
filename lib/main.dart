@@ -57,7 +57,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int currentPageIndex = 0;
 
-  final List<String> entries = <String>['1', '2', '3', '4', '5', '6', '7'];
+  static const _screens = [
+    HomeScreen(),
+    OrderScreen(),
+    ShopsScreen()
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -91,23 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: ListView.separated(
-          padding: const EdgeInsets.all(8),
-          itemCount: entries.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              height: 200,
-              child: Center(child: Image.asset("images/image${entries[index]}.jpg")),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) => const Divider(
-            color: Colors.white,
-          ),
-        )
-      ),
+      body: _screens[currentPageIndex],
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
           setState(() {
@@ -133,6 +121,105 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Shops',
           ),
         ],
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final List<String> entries = <String>['1', '2', '3', '4', '5', '6', '7'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+          child: ListView.separated(
+            padding: const EdgeInsets.all(8),
+            itemCount: entries.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+              height: 200,
+              child: Center(child: Image.asset("images/image${entries[index]}.jpg")),
+            );
+            },
+            separatorBuilder: (BuildContext context, int index) =>
+            const Divider(
+              color: Colors.white,
+            ),
+          )
+      ),
+    );
+  }
+}
+
+class OrderScreen extends StatefulWidget {
+  const OrderScreen({super.key});
+
+  @override
+  State<OrderScreen> createState() => _OrderScreenState();
+}
+
+class _OrderScreenState extends State<OrderScreen> {
+  final List<String> entries = <String>['6', '7'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+          child: ListView.separated(
+            padding: const EdgeInsets.all(8),
+            itemCount: entries.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+              height: 200,
+              child: Center(child: Image.asset("images/image${entries[index]}.jpg")),
+            );
+            },
+            separatorBuilder: (BuildContext context, int index) =>
+            const Divider(
+              color: Colors.white,
+            ),
+          )
+      ),
+    );
+  }
+}
+
+class ShopsScreen extends StatefulWidget {
+  const ShopsScreen({super.key});
+
+  @override
+  State<ShopsScreen> createState() => _ShopsScreenState();
+}
+
+class _ShopsScreenState extends State<ShopsScreen> {
+  final List<String> entries = <String>['3', '4', '5'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+          child: ListView.separated(
+            padding: const EdgeInsets.all(8),
+            itemCount: entries.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+              height: 200,
+              child: Center(child: Image.asset("images/image${entries[index]}.jpg")),
+            );
+            },
+            separatorBuilder: (BuildContext context, int index) =>
+            const Divider(
+              color: Colors.white,
+            ),
+          )
       ),
     );
   }
