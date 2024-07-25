@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:url_launcher/url_launcher.dart';
+
+import './homescreen.dart';
+import './orderscreen.dart';
+import './shopscreen.dart';
+import './inboxscreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -63,7 +65,8 @@ class _MyHomePageState extends State<MyHomePage> {
   static const _screens = [
     HomeScreen(),
     OrderScreen(),
-    ShopsScreen()
+    ShopsScreen(),
+    InboxScreen()
   ];
 
   @override
@@ -91,9 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             tooltip: 'Inbox',
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Inbox っていうラベルつけれんかった')),
-              );
+              currentPageIndex = 3;
             },
           ),
         ],
@@ -125,106 +126,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final List<String> entries = <String>['1', '2', '3', '4', '5', '6', '7'];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-          child: ListView.separated(
-            padding: const EdgeInsets.all(8),
-            itemCount: entries.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-              height: 200,
-              child: Center(child: Image.asset("images/image${entries[index]}.jpg")),
-            );
-            },
-            separatorBuilder: (BuildContext context, int index) =>
-            const Divider(
-              color: Colors.white,
-            ),
-          )
-      ),
-    );
-  }
-}
-
-class OrderScreen extends StatefulWidget {
-  const OrderScreen({super.key});
-
-  @override
-  State<OrderScreen> createState() => _OrderScreenState();
-}
-
-class _OrderScreenState extends State<OrderScreen> {
-  final List<String> entries = <String>['6', '7'];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-          child: ListView.separated(
-            padding: const EdgeInsets.all(8),
-            itemCount: entries.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-              height: 200,
-              child: Center(child: Image.asset("images/image${entries[index]}.jpg")),
-            );
-            },
-            separatorBuilder: (BuildContext context, int index) =>
-            const Divider(
-              color: Colors.white,
-            ),
-          )
-      ),
-    );
-  }
-}
-
-class ShopsScreen extends StatefulWidget {
-  const ShopsScreen({super.key});
-
-  @override
-  State<ShopsScreen> createState() => _ShopsScreenState();
-}
-
-class _ShopsScreenState extends State<ShopsScreen> {
-
-  @override
-  Widget build(BuildContext context) {
-    return FlutterMap(
-      options: MapOptions(
-        initialCenter: LatLng(33.57527338772311, 133.5784302),
-        initialZoom: 9.2,
-      ),
-      children: [
-        TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.example.app',
-        ),
-        RichAttributionWidget(
-          attributions: [
-            TextSourceAttribution(
-              'OpenStreetMap contributors',
-              onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }
