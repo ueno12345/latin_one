@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import './homescreen.dart';
 import './orderscreen.dart';
@@ -78,59 +79,74 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        backgroundColor: Colors.amber,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-        actions: <Widget>[
-          IconButton(
-            icon: Badge(
-              child: Icon(Icons.notifications_outlined),
-            ),
-            tooltip: 'Inbox',
-            onPressed: () {
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (bool didPop) {
+          if((inbox_flag == 1) | (currentPageIndex != 0)){
+            setState(() {
+              inbox_flag = 0;
+              currentPageIndex = 0;
+            });
+          }
+          else {
+              SystemNavigator.pop();
+          }
+        },
+
+        child: Scaffold(
+          appBar: AppBar(
+            // TRY THIS: Try changing the color here to a specific color (to
+            // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+            // change color while the other colors stay the same.
+            // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            backgroundColor: Colors.amber,
+            // Here we take the value from the MyHomePage object that was created by
+            // the App.build method, and use it to set our appbar title.
+            title: Text(widget.title),
+            actions: <Widget>[
+              IconButton(
+                icon: Badge(
+                  child: Icon(Icons.notifications_outlined),
+                ),
+                tooltip: 'Inbox',
+                onPressed: () {
+                  setState(() {
+                    inbox_flag = 1;
+                  });
+                },
+              ),
+            ],
+          ),
+          // body: _screens[currentPageIndex],
+          body: _ctr_screen(inbox_flag, currentPageIndex),
+          bottomNavigationBar: NavigationBar(
+            onDestinationSelected: (int index) {
               setState(() {
-                inbox_flag = 1;
+                inbox_flag = 0;
+                currentPageIndex = index;
               });
             },
+            indicatorColor: Colors.amber,
+            selectedIndex: currentPageIndex,
+            destinations: const <Widget>[
+              NavigationDestination(
+                selectedIcon: Icon(Icons.home),
+                icon: Icon(Icons.home_outlined),
+                label: 'Home',
+              ),
+              NavigationDestination(
+                selectedIcon: Icon(Icons.coffee),
+                icon: Icon(Icons.coffee_outlined),
+                label: 'Order',
+              ),
+              NavigationDestination(
+                selectedIcon: Icon(Icons.store),
+                icon: Icon(Icons.store_outlined),
+                label: 'Shops',
+              ),
+            ],
           ),
-        ],
-      ),
-      // body: _screens[currentPageIndex],
-      body: _ctr_screen(inbox_flag, currentPageIndex),
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (int index) {
-          setState(() {
-            inbox_flag = 0;
-            currentPageIndex = index;
-          });
-        },
-        indicatorColor: Colors.amber,
-        selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.coffee),
-            icon: Icon(Icons.coffee_outlined),
-            label: 'Order',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.store),
-            icon: Icon(Icons.store_outlined),
-            label: 'Shops',
-          ),
-        ],
-      ),
+        ),
     );
   }
 
