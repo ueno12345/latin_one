@@ -61,6 +61,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int currentPageIndex = 0;
+  int inbox_flag = 0;
 
   static const _screens = [
     HomeScreen(),
@@ -94,15 +95,19 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             tooltip: 'Inbox',
             onPressed: () {
-              currentPageIndex = 3;
+              setState(() {
+                inbox_flag = 1;
+              });
             },
           ),
         ],
       ),
-      body: _screens[currentPageIndex],
+      // body: _screens[currentPageIndex],
+      body: _ctr_screen(inbox_flag, currentPageIndex),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
           setState(() {
+            inbox_flag = 0;
             currentPageIndex = index;
           });
         },
@@ -127,5 +132,13 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+
+  Widget _ctr_screen(int inbox_flag, int index){
+    if (inbox_flag == 1) {
+      return InboxScreen();
+    }else{
+      return _screens[index];
+    }
   }
 }
