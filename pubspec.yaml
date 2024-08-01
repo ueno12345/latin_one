@@ -41,6 +41,7 @@ dependencies:
 
   # Add url_launcher for open url
   url_launcher: ^6.3.0
+  firebase_core: ^3.3.0
 
 dev_dependencies:
   flutter_test:
