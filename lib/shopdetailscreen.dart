@@ -137,3 +137,4 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
     );
   }
 }
+
