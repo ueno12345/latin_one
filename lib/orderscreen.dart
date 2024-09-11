@@ -156,7 +156,7 @@ class _OrderScreenState extends State<OrderScreen> {
         child: Text(
           '購入',
           style: TextStyle(
-            color: Colors.black,
+            color: (shop != null && product != null) ? Colors.black : Colors.white,
             fontSize: 24,
           ),
         ),
@@ -172,7 +172,7 @@ class _OrderScreenState extends State<OrderScreen> {
             );
           }
         },
-        style: ElevatedButton.styleFrom(backgroundColor: (shop != null && product != null) ? Colors.grey[100] : Colors.grey[700]),
+        style: ElevatedButton.styleFrom(backgroundColor: (shop != null && product != null) ? Colors.amber : Colors.amber[100]),
       ),
     );
   }
