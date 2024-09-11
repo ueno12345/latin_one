@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import './shopselectionscreen.dart';
 import './productselectionscreen.dart';
 import './purchasedetailscreen.dart';
@@ -106,16 +107,18 @@ class _OrderScreenState extends State<OrderScreen> {
       alignment: Alignment.center,
       child: GestureDetector(
         onTap: () async {
-          product = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProductSelectionScreen(),
-              )
-          );
-          if(product != null) {
-            setState(() {
-              _product = product;
-            });
+          if(shop != null) {
+            product = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductSelectionScreen(),
+                )
+            );
+            if (product != null) {
+              setState(() {
+                _product = product;
+              });
+            }
           }
         },
         child: Container(
@@ -157,16 +160,20 @@ class _OrderScreenState extends State<OrderScreen> {
             fontSize: 24,
           ),
         ),
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PurchaseDetailScreen(shop: shop, product: product,),
-              )
-          );
+        onPressed: () async {
+          if(shop != null && product != null) {
+            final data = ClipboardData(text: "店舗名: ${shop}\n商品: ${product}");
+            await Clipboard.setData(data);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PurchaseDetailScreen(shop: shop, product: product,),
+                )
+            );
+          }
         },
+        style: ElevatedButton.styleFrom(backgroundColor: (shop != null && product != null) ? Colors.grey[100] : Colors.grey[700]),
       ),
     );
   }
-
-} // end _OrderScreenState
+}
