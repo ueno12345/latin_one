@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import './shopselectionscreen.dart';
 import './productselectionscreen.dart';
 import './purchasedetailscreen.dart';
-//import 'dart:async';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -169,22 +168,38 @@ class _OrderScreenState extends State<OrderScreen> {
       alignment: Alignment.centerLeft,
       child: Column(
         children: [
-          Text(
-            'カート内容',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 24,
+          Container(
+            margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 12.0),
+            padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 12.0),
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.amber
+                ),
+              )
+            ),
+            child: Text(
+              'カート内容',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 24,
+              ),
             ),
           ),
-          ListView.separated(
-            shrinkWrap: true,
-            itemCount: cart.length,
-            separatorBuilder: (BuildContext context, int index) => const Divider(),
-            itemBuilder: (BuildContext context, int index) {
-              return _selectedProduct(cart[index]);
-            },
+          Container(
+            height: 200,
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemCount: cart.length,
+              separatorBuilder: (BuildContext context, int index) => const Divider(),
+              itemBuilder: (BuildContext context, int index) {
+                return _selectedProduct(cart[index]);
+              },
+            ),
           ),
           Container(
+            alignment: Alignment.centerRight,
             child: Text(
               "総合計" + ": " + "¥" + sum.toString(),
               style: TextStyle(
