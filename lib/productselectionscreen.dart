@@ -19,23 +19,29 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Products',
-          style: TextStyle(
-            color: Colors.red,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Colors.amber,
-      ),
-      body: Column(
-        children: [
-          products("image8", "ブルーマウンテン", 100, 100),
+    return WillPopScope(
+        onWillPop: () {
+          Navigator.pop(context, widget.cart);
+          return Future.value(false);
+        },
+        child: Scaffold(
+            appBar: AppBar(
+              title: const Text(
+                'Products',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              backgroundColor: Colors.amber,
+            ),
+            body: Column(
+              children: [
+                products("image8", "ブルーマウンテン", 100, 100),
 
-        ],
-      )
+              ],
+            )
+        )
     );
   }
 
