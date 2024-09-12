@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import './shopselectionscreen.dart';
@@ -16,14 +17,15 @@ class _OrderScreenState extends State<OrderScreen> {
   static const containerHeight = 120.0;
   var shop;
   var _shop, _cart;
+  num sum = 0;
   List<Map<String, dynamic>> cart = [];
   var id = 1;
 
   @override
   void initState() {
     super.initState();
-    _shop = "店舗情報選択画面へ";
-    _cart = "商品選択画面へ";
+    _shop = "店舗を選択する";
+    _cart = "商品を選択する";
   }
 
   @override
@@ -41,7 +43,8 @@ class _OrderScreenState extends State<OrderScreen> {
                   'Order & Pay',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 24,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -51,6 +54,10 @@ class _OrderScreenState extends State<OrderScreen> {
               _productselectionContainer(),
             ],
           ),
+          Padding(
+              padding: EdgeInsets.all(4.0)
+          ),
+          _cartdisplayContainer(),
           Expanded(child: Container()),
           // Purchase Button
           _purchasedetailContainer(),
@@ -110,17 +117,23 @@ class _OrderScreenState extends State<OrderScreen> {
       child: GestureDetector(
         onTap: () async {
           if(shop != null) {
-            cart = await Navigator.push(
+            final List<Map<String, dynamic>> result = await Navigator.push<List<Map<String, dynamic>>>(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProductSelectionScreen(cart: cart, id:id),
                 )
-            );
-            if (cart != null) {
-              setState(() {
-                _cart = cart;
-              });
+            ) ?? cart;
+            cart = result;
+            if(cart != []) {
+              num i = 0;
+              for (final product in cart) {
+                i = i + product['pieces'] * product['price'];
+              }
+              sum = i;
             }
+            setState(() {
+              _cart = '商品を追加する';
+            });
           }
         },
         child: Container(
@@ -150,6 +163,114 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 
+  Widget _cartdisplayContainer() {
+    return Container(
+      margin: EdgeInsets.all(4.0),
+      alignment: Alignment.centerLeft,
+      child: Column(
+        children: [
+          Text(
+            'カート内容',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 24,
+            ),
+          ),
+          ListView.separated(
+            shrinkWrap: true,
+            itemCount: cart.length,
+            separatorBuilder: (BuildContext context, int index) => const Divider(),
+            itemBuilder: (BuildContext context, int index) {
+              return _selectedProduct(cart[index]);
+            },
+          ),
+          Container(
+            child: Text(
+              "総合計" + ": " + "¥" + sum.toString(),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 24,
+              ),
+            ),
+          )
+        ]
+      )
+    );
+  }
+
+  Widget _selectedProduct(Map<String, dynamic> product) {
+    return Row(
+      children: [
+        ElevatedButton(
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("商品を削除しますか？"),
+                      content: Text("カートから選択した商品を削除します"),
+                      actions: [
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "キャンセル",
+                            )
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              cart.remove(product);
+                              sum = sum - product['pieces'] * product['price'];
+                              Navigator.pop(context);
+                              setState(() {
+                              });
+                              print(cart);
+                            },
+                            child: Text(
+                              "OK",
+                            )
+                        ),
+                      ],
+                    );
+                  }
+              );
+            },
+            child: Icon(
+                Icons.remove_circle_outline
+            )
+        ),
+        Container(
+          child: Text(
+            product['name'],
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 24,
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+          child: Text(
+            product['pieces'].toString() + "点",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 24,
+            ),
+          ),
+        ),
+        Expanded(child: Container()),
+        Text(
+          "¥" + (product['price'] * product['pieces']).toString(),
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _purchasedetailContainer() {
     return Container(
       margin: EdgeInsets.all(4.0),
@@ -158,12 +279,12 @@ class _OrderScreenState extends State<OrderScreen> {
         child: Text(
           '購入',
           style: TextStyle(
-            color: (shop != null && cart != null) ? Colors.black : Colors.white,
+            color: (shop != null && cart.length > 0) ? Colors.black : Colors.white,
             fontSize: 24,
           ),
         ),
         onPressed: () async {
-          if(shop != null && cart != null) {
+          if(shop != null && cart.length > 0) {
             final data = ClipboardData(text: "店舗名: ${shop}\n商品: ${cart}");
             await Clipboard.setData(data);
             Navigator.push(
@@ -174,7 +295,7 @@ class _OrderScreenState extends State<OrderScreen> {
             );
           }
         },
-        style: ElevatedButton.styleFrom(backgroundColor: (shop != null && cart != null) ? Colors.amber : Colors.amber[100]),
+        style: ElevatedButton.styleFrom(backgroundColor: (shop != null && cart.length > 0) ? Colors.amber : Colors.amber[100]),
       ),
     );
   }
