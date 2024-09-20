@@ -112,7 +112,7 @@ class _ProductPopupScreenState extends State<ProductPopupScreen> {
                         Container(
                           padding: EdgeInsets.fromLTRB(10.0,0.0,10.0,0.0),
                           child: Text(
-                            "${piece}",
+                            piece.toString(),
                             style: TextStyle(
                                 fontSize: 30
                             ),
@@ -169,7 +169,7 @@ class _ProductPopupScreenState extends State<ProductPopupScreen> {
         style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
         onPressed: () async {
             // 数量を返す
-              Navigator.pop(context, piece);
+              Navigator.pop(context, piece.toString());
         },
       ),
     );
