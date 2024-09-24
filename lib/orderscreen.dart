@@ -126,7 +126,7 @@ class _OrderScreenState extends State<OrderScreen> {
             if(cart != []) {
               num i = 0;
               for (final product in cart) {
-                i = i + product['pieces'] * product['price'];
+                i = i + int.parse(product['pieces']) * int.parse(product['price']);
               }
               sum = i;
             }
@@ -236,7 +236,7 @@ class _OrderScreenState extends State<OrderScreen> {
                         ElevatedButton(
                             onPressed: () {
                               cart.remove(product);
-                              sum = sum - product['pieces'] * product['price'];
+                              sum = sum - int.parse(product['pieces']) * int.parse(product['price']);
                               Navigator.pop(context);
                               setState(() {
                               });
@@ -257,7 +257,7 @@ class _OrderScreenState extends State<OrderScreen> {
         ),
         Container(
           child: Text(
-            product['name'],
+            product['name'].toString(),
             style: TextStyle(
               color: Colors.black,
               fontSize: 24,
@@ -276,7 +276,7 @@ class _OrderScreenState extends State<OrderScreen> {
         ),
         Expanded(child: Container()),
         Text(
-          "¥" + (product['price'] * product['pieces']).toString(),
+          "¥" + (int.parse(product['price']) * int.parse(product['pieces'])).toString(),
           style: TextStyle(
             color: Colors.black,
             fontSize: 24,

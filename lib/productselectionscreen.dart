@@ -1,10 +1,9 @@
-import 'dart:math';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import './productpopupscreen.dart';
 class ProductSelectionScreen extends StatefulWidget {
   List<Map<String, dynamic>> cart;
-  var id;
+  int id;
   ProductSelectionScreen({super.key, required this.cart, required this.id});
 
   @override
@@ -12,13 +11,23 @@ class ProductSelectionScreen extends StatefulWidget {
 }
 
 class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
-  static const containerHeight = 120.0;
-  var pieces;
-
-
+  var pieces = '0';
 
   @override
   Widget build(BuildContext context) {
+    // データを取得するための関数
+    Future<Map<String, dynamic>> getDocumentData() async {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('shops')
+          .doc('javanican')
+          .collection('products')
+          .doc('beans')
+          .collection('categories')
+          .doc('blend_coffee')
+          .get();
+      return snapshot.data() as Map<String, dynamic>;
+    }
+
     return WillPopScope(
         onWillPop: () {
           Navigator.pop(context, widget.cart);
@@ -35,11 +44,38 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
               ),
               backgroundColor: Colors.amber,
             ),
-            body: Column(
-              children: [
-                products("image8", "ブルーマウンテン", 100, 100),
+            body: FutureBuilder(
+                future: getDocumentData(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return const CircularProgressIndicator();
+                  }
+                  // エラー時に表示するWidget
+                  if (snapshot.hasError) {
+                    print(snapshot.error);
+                    return Text('Error');
+                  }
 
-              ],
+                  // データが取得できなかったときに表示するWidget
+                  if (!snapshot.hasData) {
+                    return Text('No Data');
+                  }
+
+                  List<MapEntry<String, dynamic>> beanList = snapshot.data!.entries.toList();
+                  print(beanList);
+                  // 取得したデータを表示するWidget
+                  return GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                      ),
+                      itemCount: beanList.length,
+                      itemBuilder: (context, index) {
+                        final beanEntry = beanList[index];
+                        final bean = beanEntry.value;
+                        return products("image8", bean['name'], bean['price'], 100);
+                      }
+                  );
+                }
             )
         )
     );
@@ -57,10 +93,10 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
             pieces = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProductPopupScreen(image: image, product: name),
+                  builder: (context) => ProductPopupScreen(image: image, product: name.toString()),
                 )
             );
-            (widget.cart).add({'id':widget.id, 'name':name, 'pieces':pieces, 'price':price});
+            (widget.cart).add({'id':widget.id, 'name':name.toString(), 'pieces':pieces.toString(), 'price':price.toString()});
             print(widget.cart);
             widget.id++;
         },
@@ -81,7 +117,7 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
               child:
               Container(
                 child: Text(
-                  "${name}",
+                  name.toString(),
                   style: TextStyle(
                       fontSize: 16
                   ),
@@ -95,7 +131,7 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
                   children: [
                     Container(
                       child: Text(
-                        "￥${price}",
+                        "￥" + price.toString(),
                         style: TextStyle(
                             fontSize: 20
                         ),
