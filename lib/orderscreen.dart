@@ -350,12 +350,12 @@ class _OrderScreenState extends State<OrderScreen> {
         ),
         onPressed: () async {
           if(shop != null && address != null && cart.length > 0) {
-            final data = ClipboardData(text: "店舗名: ${shop}\n商品: ${cart}");
+            final data = ClipboardData(text: "店舗名: ${shop}\n配送先: ${address}\n商品: ${cart}");
             await Clipboard.setData(data);
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PurchaseDetailScreen(shop: shop, cart: cart,),
+                  builder: (context) => PurchaseDetailScreen(shop: shop, address: address, cart: cart),
                 )
             );
           }

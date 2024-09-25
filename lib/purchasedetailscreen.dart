@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PurchaseDetailScreen extends StatefulWidget {
-  final shop, cart;
-  const PurchaseDetailScreen({super.key, required this.shop, required this.cart});
+  final shop, address, cart;
+  const PurchaseDetailScreen({super.key, required this.shop, required this.address, required this.cart});
 
   @override
   State<PurchaseDetailScreen> createState() => _PurchaseDetailScreenState();
