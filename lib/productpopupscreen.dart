@@ -58,7 +58,6 @@ class _ProductPopupScreenState extends State<ProductPopupScreen> {
             child: Container(
                   child: Container(
                           child: Text(
-                            //"ブルーマウンテンは、ジャマイカにあるブルーマウンテン山脈の標高800から1,200 mの限られた地域で栽培されるコーヒー豆のブランドである",
                             widget.description.toString(),
                             style: TextStyle(
                               color: Colors.black,
