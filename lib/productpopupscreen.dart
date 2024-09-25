@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 class ProductPopupScreen extends StatefulWidget {
   final image;
   final product;
-  const ProductPopupScreen({super.key, required this.image, required this.product});
+  final description;
+  const ProductPopupScreen({super.key, required this.image, required this.product, required this.description});
 
   @override
   State<ProductPopupScreen> createState() => _ProductPopupScreenState();
@@ -32,7 +33,8 @@ class _ProductPopupScreenState extends State<ProductPopupScreen> {
                 Container(
                   height: 140,
                   child: Image.asset(
-                      "images/${widget.image}.jpg"
+                      //widget.image.toString()
+                      "images/image1.jpg"
                   ),
                 ),
                 Container(
@@ -56,7 +58,8 @@ class _ProductPopupScreenState extends State<ProductPopupScreen> {
             child: Container(
                   child: Container(
                           child: Text(
-                            "ブルーマウンテンは、ジャマイカにあるブルーマウンテン山脈の標高800から1,200 mの限られた地域で栽培されるコーヒー豆のブランドである",
+                            //"ブルーマウンテンは、ジャマイカにあるブルーマウンテン山脈の標高800から1,200 mの限られた地域で栽培されるコーヒー豆のブランドである",
+                            widget.description.toString(),
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 20,
