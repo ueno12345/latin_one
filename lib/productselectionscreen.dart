@@ -22,8 +22,6 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
           .doc('javanican')
           .collection('products')
           .doc('beans')
-          .collection('categories')
-          .doc('blend_coffee')
           .get();
       return snapshot.data() as Map<String, dynamic>;
     }
@@ -72,7 +70,7 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
                       itemBuilder: (context, index) {
                         final beanEntry = beanList[index];
                         final bean = beanEntry.value;
-                        return products("image8", bean['name'], bean['price'], 100);
+                        return products(bean['image'], bean['name'], bean['price'], bean['description']);
                       }
                   );
                 }
@@ -81,7 +79,7 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
     );
   }
 
-  Widget products(image, name, price, gram){
+  Widget products(image, name, price, description){
     const containerHeight = 180.0;
     const containerWidth = 180.0;
     return Container(
@@ -93,7 +91,7 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
             pieces = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProductPopupScreen(image: image, product: name.toString()),
+                  builder: (context) => ProductPopupScreen(image: image, product: name.toString(), description: description.toString()),
                 )
             );
             (widget.cart).add({'id':widget.id, 'name':name.toString(), 'pieces':pieces.toString(), 'price':price.toString()});
@@ -107,7 +105,8 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
               child:
               Container(
                 child: Image.asset(
-                  "images/${image}.jpg",
+                  //image.toString(),
+                  "images/image1.jpg",
                   fit: BoxFit.cover,
                 ),
               ),
@@ -140,7 +139,7 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
                     Container(
 
                       child: Text(
-                        " (${gram}g)",
+                        " (100g)",
                         style: TextStyle(
                             fontSize: 20
                         ),
