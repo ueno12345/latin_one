@@ -73,15 +73,36 @@ class _MyHomePageState extends State<MyHomePage> {
   int currentPageIndex = 0;
   int inbox_flag = 0;
 
-  static const _screens = [
-    HomeScreen(),
-    OrderScreen(),
-    ShopsScreen(),
-    InboxScreen()
-  ];
+  void ChangeInboxFlag(int flag) {
+    setState(() {
+      inbox_flag = flag;
+    });
+  }
+
+  void ChangeIndex(int index) {
+    setState(() {
+      inbox_flag = 0;
+      currentPageIndex = index;
+    });
+  }
+
+  late List<Widget> _screens;
 
   @override
+
+  initState() {
+    super.initState();
+    _screens = [
+      HomeScreen(ChangeIndex: ChangeIndex, ChangeInboxFlag: ChangeInboxFlag),
+      OrderScreen(),
+      ShopsScreen(),
+      InboxScreen()
+    ];
+  }
+
   Widget build(BuildContext context) {
+
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -89,80 +110,74 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return PopScope(
-        canPop: false,
-        onPopInvoked: (bool didPop) {
-          if((inbox_flag == 1) | (currentPageIndex != 0)){
-            setState(() {
-              inbox_flag = 0;
-              currentPageIndex = 0;
-            });
-          }
-          else {
-              SystemNavigator.pop();
-          }
-        },
+      canPop: false,
+      onPopInvoked: (bool didPop) {
+        if((inbox_flag == 1) | (currentPageIndex != 0)){
+          setState(() {
+            inbox_flag = 0;
+            currentPageIndex = 0;
+          });
+        }
+        else {
+          SystemNavigator.pop();
+        }
+      },
 
-        child: Scaffold(
-          appBar: AppBar(
-            // TRY THIS: Try changing the color here to a specific color (to
-            // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-            // change color while the other colors stay the same.
-            // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            backgroundColor: Colors.amber,
-            // Here we take the value from the MyHomePage object that was created by
-            // the App.build method, and use it to set our appbar title.
-            title: Text(
-                widget.title,
-                style:
-                  TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+      child: Scaffold(
+        appBar: AppBar(
+          // TRY THIS: Try changing the color here to a specific color (to
+          // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+          // change color while the other colors stay the same.
+          // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          backgroundColor: Colors.amber,
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text(
+              widget.title,
+              style:
+                TextStyle(
+                  fontWeight: FontWeight.bold,
                 ),
-            actions: <Widget>[
-              IconButton(
-                icon: Badge(
-                  child: Icon(Icons.notifications_outlined),
-                ),
-                tooltip: 'Inbox',
-                onPressed: () {
-                  setState(() {
-                    inbox_flag = 1;
-                  });
-                },
               ),
-            ],
-          ),
-          // body: _screens[currentPageIndex],
-          body: _ctr_screen(inbox_flag, currentPageIndex),
-          bottomNavigationBar: NavigationBar(
-            onDestinationSelected: (int index) {
-              setState(() {
-                inbox_flag = 0;
-                currentPageIndex = index;
-              });
-            },
-            indicatorColor: Colors.amber,
-            selectedIndex: currentPageIndex,
-            destinations: const <Widget>[
-              NavigationDestination(
-                selectedIcon: Icon(Icons.home),
-                icon: Icon(Icons.home_outlined),
-                label: 'Home',
+          actions: <Widget>[
+            IconButton(
+              icon: Badge(
+                child: Icon(Icons.notifications_outlined),
               ),
-              NavigationDestination(
-                selectedIcon: Icon(Icons.coffee),
-                icon: Icon(Icons.coffee_outlined),
-                label: 'Order',
-              ),
-              NavigationDestination(
-                selectedIcon: Icon(Icons.store),
-                icon: Icon(Icons.store_outlined),
-                label: 'Shops',
-              ),
-            ],
-          ),
+              tooltip: 'Inbox',
+              onPressed: () {
+                ChangeInboxFlag(inbox_flag);
+              }
+            ),
+          ],
         ),
+        // body: _screens[currentPageIndex],
+        body: _ctr_screen(inbox_flag, currentPageIndex),
+        bottomNavigationBar: NavigationBar(
+          onDestinationSelected: ChangeIndex,
+          indicatorColor: Colors.amber,
+          selectedIndex: currentPageIndex,
+          destinations: const <Widget>[
+            NavigationDestination(
+              selectedIcon: Icon(Icons.home),
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.coffee),
+              icon: Icon(Icons.coffee_outlined),
+              label: 'Order',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.store),
+              icon: Icon(Icons.store_outlined),
+              label: 'Shops',
+            ),
+          ],
+        ),
+      ),
     );
+
   }
 
   Widget _ctr_screen(int inbox_flag, int index){
