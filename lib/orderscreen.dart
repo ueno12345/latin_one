@@ -5,6 +5,7 @@ import './shopselectionscreen.dart';
 import './deliveryaddressscreen.dart';
 import './productselectionscreen.dart';
 import './purchasedetailscreen.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -15,9 +16,10 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   static const containerHeight = 80.0;
-  var shop, address;
+  var shop;
   var _shop, _address, _cart;
   num sum = 0;
+  List<Map<String, String>> deliveryaddress = [];
   List<Map<String, dynamic>> cart = [];
   var id = 1;
 
@@ -128,7 +130,7 @@ class _OrderScreenState extends State<OrderScreen> {
       child: GestureDetector(
         onTap: () async {
           if(shop != null){
-            address = await Navigator.push(
+            deliveryaddress = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => DeliveryAddressScreen(),
@@ -137,9 +139,9 @@ class _OrderScreenState extends State<OrderScreen> {
 
           }
 
-          if(address != null) {
+          if(deliveryaddress != []) {
             setState(() {
-              _address = address;
+              _address = deliveryaddress[2]['address'];
             });
           }
         },
@@ -344,23 +346,31 @@ class _OrderScreenState extends State<OrderScreen> {
         child: Text(
           '購入',
           style: TextStyle(
-            color: (shop != null && address != null && cart.length > 0) ? Colors.black : Colors.white,
+            color: (shop != null && deliveryaddress != [] && cart.length > 0) ? Colors.black : Colors.white,
             fontSize: 24,
           ),
         ),
         onPressed: () async {
-          if(shop != null && address != null && cart.length > 0) {
-            final data = ClipboardData(text: "店舗名: ${shop}\n配送先: ${address}\n商品: ${cart}");
-            await Clipboard.setData(data);
+          if(shop != null && deliveryaddress != [] && cart.length > 0) {
+            //店へメールを送信
+            final _mailbody = 'ご注文内容';
+            final Email email = Email(
+              body: _mailbody,
+              subject: 'ご注文内容の受信(${deliveryaddress[0]['name']}様)',
+              recipients: ['${deliveryaddress[1]['mail']}'],
+              isHTML: false,
+            );
+            await FlutterEmailSender.send(email);
+
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PurchaseDetailScreen(shop: shop, address: address, cart: cart),
+                  builder: (context) => PurchaseDetailScreen(shop: shop, address: deliveryaddress[2]['address'], cart: cart),
                 )
             );
           }
         },
-        style: ElevatedButton.styleFrom(backgroundColor: (shop != null && address != null && cart.length > 0) ? Colors.amber : Colors.amber[100]),
+        style: ElevatedButton.styleFrom(backgroundColor: (shop != null && deliveryaddress != [] && cart.length > 0) ? Colors.amber : Colors.amber[100]),
       ),
     );
   }
