@@ -46,6 +46,8 @@ dependencies:
   flutter_dotenv: ^5.1.0
   cloud_firestore: ^5.4.0
   connectivity_plus: ^6.0.5
+  email_validator: '^2.1.17'
+  flutter_email_sender: ^6.0.3
 
 dev_dependencies:
   flutter_test:

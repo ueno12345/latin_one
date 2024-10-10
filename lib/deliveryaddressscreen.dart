@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
+import 'package:email_validator/email_validator.dart';
 
 class DeliveryAddressScreen extends StatefulWidget {
   const DeliveryAddressScreen({Key? key}) : super(key: key);
@@ -13,22 +14,27 @@ class DeliveryAddressScreen extends StatefulWidget {
 }
 
 class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
+  List<Map<String, String>> deliveryaddress = List.unmodifiable([{"name":""}, {"mail":""}, {"address":""}]);
+  final nameController = TextEditingController();
+  final mailController = TextEditingController();
   final zipCodeController = TextEditingController();
   final prefController = TextEditingController();
   final cityController = TextEditingController();
   final streetController = TextEditingController();
   final buildingController = TextEditingController();
 
+
   var _buttonbgcolor = Colors.amber[100];
   var _buttontextcolor = Colors.white;
+  var addressMap;
 
 
   @override
   Widget build(BuildContext context) {
     bool canPress(){
-      return (zipCodeController.text.isNotEmpty &&
-              prefController.text.isNotEmpty &&
-              cityController.text.isNotEmpty &&
+      return (nameController.text.isNotEmpty &&
+              EmailValidator.validate(mailController.text) &&
+              addressMap != null &&
               streetController.text.isNotEmpty);
     }
     void changebuttoncolor(){
@@ -44,12 +50,10 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
         });
         }
       }
-
+    nameController.addListener((){changebuttoncolor();});
+    mailController.addListener((){changebuttoncolor();});
     zipCodeController.addListener((){changebuttoncolor();});
-    prefController.addListener((){changebuttoncolor();});
-    cityController.addListener((){changebuttoncolor();});
     streetController.addListener((){changebuttoncolor();});
-    buildingController.addListener((){changebuttoncolor();});
     return WillPopScope(
         onWillPop: () {
           //左上の戻るボタンを押下したら何も返さない
@@ -77,7 +81,26 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                 children: [
                   TextFormField(
                     decoration: const InputDecoration(
-                      hintText: '郵便番号',
+                    hintText: '氏名(必須)',
+                    ),
+                    controller: nameController,
+                  ),
+
+                  TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction, //値が変わるたびにvalidatorを呼び出す
+                    decoration: const InputDecoration(
+                      hintText: 'メールアドレス(必須)',
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (String? value){
+                      return (value != null && !EmailValidator.validate(value))?  '有効なメールアドレスを入力してください': null;
+                    },
+                    controller: mailController,
+                  ),
+                  TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction, //値が変わるたびにvalidatorを呼び出す
+                    decoration: const InputDecoration(
+                      hintText: '郵便番号(必須)',
                     ),
                     maxLength: 7,
                     onChanged: (value) async {
@@ -85,7 +108,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                       if (value.length != 7) {
                         return;
                       }
-                      final addressMap = await zipCodeToAddress(value);
+                      addressMap = await zipCodeToAddress(value);
                       // 返ってきた値がnullなら終了
                       if (addressMap == null) {
                         const snackBar = SnackBar(
@@ -96,7 +119,6 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                         return;
                       } else {
                         prefController.text = addressMap['address1'];
-                        print(prefController.text != "");
                         cityController.text =
                         '${addressMap['address2']} ${addressMap['address3']}';
                       }
@@ -107,19 +129,21 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                   ),
                   TextFormField(
                     decoration: const InputDecoration(
-                      hintText: '都道府県',
+                      hintText: '都道府県(必須)',
                     ),
                     controller: prefController,
+                    enabled: false,
                   ),
                   TextFormField(
                     decoration: const InputDecoration(
-                      hintText: '市区町村',
+                      hintText: '市区町村(必須)',
                     ),
                     controller: cityController,
+                    enabled: false,
                   ),
                   TextFormField(
                     decoration: const InputDecoration(
-                      hintText: '番地',
+                      hintText: '番地(必須)',
                     ),
                     controller: streetController,
                   ),
@@ -137,18 +161,25 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                         fontSize: 24,
                       ),
                     ),
-                    onPressed: () async {
-                      if (canPress()) {
-                        Navigator.pop(context,
-                            "〒"+ zipCodeController.text + " " +
-                                  prefController.text +
-                                  cityController.text +
-                                  streetController.text +
-                                  buildingController.text);
-                      }
-                    },
+                    onPressed: (nameController.text.isEmpty ||
+                                !EmailValidator.validate(mailController.text) ||
+                                addressMap == null ||
+                                streetController.text.isEmpty) ? //バリデーション実行
+                      null : //バリデーションが通ってない場合，押せないようにする
+                      (){ //バリデーションが通っている場合，各フィールドの値を変数に詰める
+                        deliveryaddress[0]['name'] = nameController.text;
+                        deliveryaddress[1]['mail'] = mailController.text;
+                        deliveryaddress[2]['address'] = "〒"+ zipCodeController.text + " " +
+                                                        prefController.text +
+                                                        cityController.text +
+                                                        streetController.text +
+                                                        buildingController.text;
+                        Navigator.pop(context, deliveryaddress);
+                      },
+
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: _buttonbgcolor
+                      backgroundColor: _buttonbgcolor,
+                      disabledBackgroundColor: _buttonbgcolor
                     ),
                   )
                 ],
