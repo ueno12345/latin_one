@@ -2,23 +2,100 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import './shopdetailscreen.dart';
 
-class _JavanicanMarker extends Marker {
-  static const position = LatLng(33.57467445693053, 133.57844092600828);
+class ShopsScreen extends StatefulWidget {
+  const ShopsScreen({super.key});
+
+  @override
+  State<ShopsScreen> createState() => _ShopsScreenState();
+}
+
+class _ShopsScreenState extends State<ShopsScreen> {
+  @override
+  Widget build(BuildContext context) {
+    // データを取得するための関数
+    Future<List<dynamic>> getDocumentData() async {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('shops')
+          .get();
+      List<dynamic> shopList = [];
+      for (var docSnapshot in snapshot.docs) {
+        shopList.add(docSnapshot.data());
+      }
+      return shopList;
+    }
+    return Scaffold(
+        body: FutureBuilder(
+          future: getDocumentData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return Container(
+                alignment: Alignment.center,
+                child: const CircularProgressIndicator(),
+              );
+            }
+            // エラー時に表示するWidget
+            if (snapshot.hasError) {
+              return const Text('Error');
+            }
+
+            // データが取得できなかったときに表示するWidget
+            if (!snapshot.hasData) {
+              return const Text('No Data');
+            }
+
+            List<_ShopMarker> shopMarkerList = [];
+
+            for (final marker in snapshot.data!) {
+              shopMarkerList.add(_ShopMarker(marker, context));
+            }
+
+            return FlutterMap(
+              options: const MapOptions(
+                initialCenter: LatLng(33.57467445693053, 133.57844092600828),
+                initialZoom: 13.0,
+                minZoom: 9.0,
+                maxZoom: 18.0,
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                ),
+                MarkerLayer(
+                  markers: shopMarkerList,
+                ),
+                RichAttributionWidget(
+                  attributions: [
+                    TextSourceAttribution(
+                      'OpenStreetMap contributors',
+                      onTap: () =>
+                          launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
+                    ),
+                  ],
+                ),
+              ],
+            );},
+        )
+    );
+  }
+}
+
+class _ShopMarker extends Marker {
   static const size = 100.0;
 
-  _JavanicanMarker(BuildContext context)
+  _ShopMarker(Map<String, dynamic> shop, BuildContext context)
       : super(
-          height: _JavanicanMarker.size,
-          width: _JavanicanMarker.size,
-          point: position,
+          height: _ShopMarker.size,
+          width: _ShopMarker.size,
+          point: LatLng(shop['geopoint'].latitude, shop['geopoint'].longitude),
           child: GestureDetector(
             onTapDown: (TapDownDetails details) {
-              _showPopupMenu(details, context);
+              _showPopupMenu(shop, details, context);
             },
             behavior: HitTestBehavior.deferToChild,
-            child: Icon(
+            child: const Icon(
               Icons.place,
               color: Colors.red,
               size: 40.0,
@@ -27,7 +104,7 @@ class _JavanicanMarker extends Marker {
         );
 }
 
-void _showPopupMenu(TapDownDetails details, BuildContext context) {
+void _showPopupMenu(Map<String, dynamic> shop, TapDownDetails details, BuildContext context) {
   final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
   const xPos = 150.0;
   const yPos = 50.0;
@@ -54,11 +131,11 @@ void _showPopupMenu(TapDownDetails details, BuildContext context) {
               Expanded(
                 flex: 1,
                 child: Container(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'JAVANICAN',
-                    style: TextStyle(
+                    shop['name'].toString(),
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 24,
                     ),
@@ -68,11 +145,11 @@ void _showPopupMenu(TapDownDetails details, BuildContext context) {
               Expanded(
                 flex: 1,
                 child: Container(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'ここには Address が入る',
-                    style: TextStyle(
+                    shop['address'].toString(),
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 18,
                     ),
@@ -83,7 +160,7 @@ void _showPopupMenu(TapDownDetails details, BuildContext context) {
           ),
         ),
       ),
-      PopupMenuItem<String>(
+      const PopupMenuItem<String>(
         value: 'close',
         child: SizedBox(
           width: 2*xPos,
@@ -100,68 +177,10 @@ void _showPopupMenu(TapDownDetails details, BuildContext context) {
     if (value == 'detail') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ShopDetailScreen()),
+        MaterialPageRoute(builder: (context) => ShopDetailScreen(shop: shop)),
       );
     } else if (value == 'close') {
       // 何も書かんかったらそのまま閉じる
     }
   });
-}
-
-// class _JavanicanCircleMarker extends CircleMarker {
-//   _JavanicanCircleMarker()
-//       : super(
-//           point: _JavanicanMarker.position,
-//           useRadiusInMeter: true,
-//           radius: 2500,
-//           color: Colors.green.withOpacity(0.1),
-//           borderColor: Colors.white,
-//           borderStrokeWidth: 2.0,
-//         );
-// }
-
-class ShopsScreen extends StatefulWidget {
-  const ShopsScreen({super.key});
-
-  @override
-  State<ShopsScreen> createState() => _ShopsScreenState();
-}
-
-class _ShopsScreenState extends State<ShopsScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: FlutterMap(
-        options: MapOptions(
-          initialCenter: LatLng(33.57467445693053, 133.57844092600828),
-          initialZoom: 13.0,
-          minZoom: 9.0,
-          maxZoom: 18.0,
-        ),
-        children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          ),
-          MarkerLayer(
-            markers: [
-              _JavanicanMarker(context),
-            ],
-          ),
-          // CircleLayer(
-          //   circles: [
-          //     _JavanicanCircleMarker(),
-          //   ],
-          // ),
-          RichAttributionWidget(
-            attributions: [
-              TextSourceAttribution(
-                'OpenStreetMap contributors',
-                onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 }

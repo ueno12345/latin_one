@@ -3,7 +3,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ShopDetailScreen extends StatefulWidget {
-  const ShopDetailScreen({super.key});
+  Map<String, dynamic> shop;
+  ShopDetailScreen({super.key, required this.shop});
 
   @override
   State<ShopDetailScreen> createState() => _ShopDetailScreenState();
@@ -14,13 +15,6 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Future<Map<String, dynamic>> getDocumentData() async {
-      DocumentSnapshot snapshot = await FirebaseFirestore.instance
-          .collection('shops')
-          .doc('javanican')
-          .get();
-      return snapshot.data() as Map<String, dynamic>;
-    }
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -31,88 +25,70 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
           ),
         backgroundColor: Colors.amber,
       ),
-      body: FutureBuilder(
-          future: getDocumentData(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const CircularProgressIndicator();
-            }
-            // エラー時に表示するWidget
-            if (snapshot.hasError) {
-              print(snapshot.error);
-              return Text('Error');
-            }
-
-            // データが取得できなかったときに表示するWidget
-            if (!snapshot.hasData) {
-              return Text('No Data');
-            }
-            return SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.all(4.0),
-                    height: containerHeight,
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          flex: 6,
-                          child: Container(
-                            padding: EdgeInsets.all(8.0),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              snapshot.data?['address'],
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 30,
-                              ),
-                            ),
+      body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.all(4.0),
+                height: containerHeight,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 6,
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          widget.shop['address'],
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 30,
                           ),
                         ),
-                        Expanded(
-                          flex: 1,
-                          child: GestureDetector(
-                            onTap: () {
-                              _openPhoneApp(snapshot.data?['phone_number']);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(8.0),
-                              alignment: Alignment.centerLeft,
-                              child: Icon(
-                                Icons.phone,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: GestureDetector(
-                            onTap: () {
-                            _openMapApp(snapshot.data?['geopoint']);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(8.0),
-                              alignment: Alignment.centerLeft,
-                              child: Icon(
-                                Icons.map_sharp,
-                                color: Colors.black
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                  _buildContainer('BUSINESS\nHOURS', snapshot.data?['business_hours']['open'] + '~' + snapshot.data?['business_hours']['close']),
-                  _buildContainer('REGULAR\nHOLIDAY', 'Irregular'),
-                  _buildContainer('WIRELESS\nHOTSPOT', '後で決める'),
-                  _buildContainer('MOBILE\nPAYMENT', 'Cash'),
-                  _buildContainer('SERVICE', 'Mobile Order'),
-                ],
-              )
-            );
-          }
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        onTap: () {
+                          _openPhoneApp(widget.shop['phone_number']);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          alignment: Alignment.centerLeft,
+                          child: const Icon(
+                            Icons.phone,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        onTap: () {
+                          _openMapApp(widget.shop['geopoint']);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          alignment: Alignment.centerLeft,
+                          child: const Icon(
+                              Icons.map_sharp,
+                              color: Colors.black
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              _buildContainer('BUSINESS\nHOURS', widget.shop['business_hours']['open'] + '~' + widget.shop['business_hours']['close']),
+              _buildContainer('REGULAR\nHOLIDAY', 'Irregular'),
+              _buildContainer('WIRELESS\nHOTSPOT', '後で決める'),
+              _buildContainer('MOBILE\nPAYMENT', 'Cash'),
+              _buildContainer('SERVICE', 'Mobile Order'),
+            ],
+          )
       ),
     );
   }
@@ -135,7 +111,6 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
         path: 'maps/search/',
         queryParameters: {'api': '1', 'query': point.latitude.toString() + ',' + point.longitude.toString()}
     );
-    print(_mapurl);
     if (!await launchUrl(
         _mapurl,
         mode: LaunchMode.externalApplication)) {
@@ -145,8 +120,8 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
 
   Widget _buildContainer(String title, String content) {
     return Container(
-      margin: EdgeInsets.all(4.0),
-      decoration: BoxDecoration(
+      margin: const EdgeInsets.all(4.0),
+      decoration: const BoxDecoration(
         border: Border(
           top: BorderSide(
             color: Colors.grey,
@@ -160,11 +135,11 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
           Expanded(
             flex: 1,
             child: Container(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               alignment: Alignment.centerLeft,
               child: Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 16,
                 ),
@@ -174,11 +149,11 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
           Expanded(
             flex: 3,
             child: Container(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               alignment: Alignment.centerLeft,
               child: Text(
                 content,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 24,
                 ),
@@ -190,4 +165,3 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
     );
   }
 }
-
