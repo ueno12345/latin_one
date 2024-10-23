@@ -8,7 +8,8 @@ import './purchasedetailscreen.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 class OrderScreen extends StatefulWidget {
-  const OrderScreen({super.key});
+  const OrderScreen({super.key, required this.ChangeIndex});
+  final Function(int) ChangeIndex;
 
   @override
   State<OrderScreen> createState() => _OrderScreenState();
@@ -362,12 +363,17 @@ class _OrderScreenState extends State<OrderScreen> {
             );
             await FlutterEmailSender.send(email);
 
-            Navigator.push(
+            String result = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => PurchaseDetailScreen(shop: shop, address: deliveryaddress[2]['address'], cart: cart),
                 )
             );
+            if(result == "home"){
+              setState(() {
+                widget.ChangeIndex(0);
+              });
+            }
           }
         },
         style: ElevatedButton.styleFrom(backgroundColor: (shop != null && deliveryaddress != [] && cart.length > 0) ? Colors.amber : Colors.amber[100]),
