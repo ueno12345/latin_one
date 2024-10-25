@@ -14,8 +14,9 @@ class DeliveryAddressScreen extends StatefulWidget {
 }
 
 class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
-  List<Map<String, String>> deliveryaddress = List.unmodifiable([{"name":""}, {"mail":""}, {"address":""}]);
+  List<Map<String, String>> deliveryaddress = List.unmodifiable([{"name":""}, {"nickname":""}, {"mail":""}, {"address":""}]);
   final nameController = TextEditingController();
+  final nicknameController = TextEditingController();
   final mailController = TextEditingController();
   final zipCodeController = TextEditingController();
   final prefController = TextEditingController();
@@ -51,6 +52,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
         }
       }
     nameController.addListener((){changebuttoncolor();});
+    nicknameController.addListener((){changebuttoncolor();});
     mailController.addListener((){changebuttoncolor();});
     zipCodeController.addListener((){changebuttoncolor();});
     streetController.addListener((){changebuttoncolor();});
@@ -85,7 +87,12 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                     ),
                     controller: nameController,
                   ),
-
+                  TextFormField(
+                    decoration: const InputDecoration(
+                    hintText: 'ニックネーム(必須)',
+                    ),
+                    controller: nicknameController,
+                  ),
                   TextFormField(
                     autovalidateMode: AutovalidateMode.onUserInteraction, //値が変わるたびにvalidatorを呼び出す
                     decoration: const InputDecoration(
@@ -168,8 +175,9 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                       null : //バリデーションが通ってない場合，押せないようにする
                       (){ //バリデーションが通っている場合，各フィールドの値を変数に詰める
                         deliveryaddress[0]['name'] = nameController.text;
-                        deliveryaddress[1]['mail'] = mailController.text;
-                        deliveryaddress[2]['address'] = "〒"+ zipCodeController.text + " " +
+                        deliveryaddress[1]['nickname'] = nicknameController.text;
+                        deliveryaddress[2]['mail'] = mailController.text;
+                        deliveryaddress[3]['address'] = "〒"+ zipCodeController.text + " " +
                                                         prefController.text +
                                                         cityController.text +
                                                         streetController.text +

@@ -142,7 +142,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
           if(deliveryaddress != []) {
             setState(() {
-              _address = deliveryaddress[2]['address'];
+              _address = deliveryaddress[3]['address'];
             });
           }
         },
@@ -358,7 +358,7 @@ class _OrderScreenState extends State<OrderScreen> {
             final Email email = Email(
               body: _mailbody,
               subject: 'ご注文内容の受信(${deliveryaddress[0]['name']}様)',
-              recipients: ['${deliveryaddress[1]['mail']}'],
+              recipients: ['${deliveryaddress[2]['mail']}'],
               isHTML: false,
             );
             await FlutterEmailSender.send(email);
@@ -366,7 +366,7 @@ class _OrderScreenState extends State<OrderScreen> {
             String result = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PurchaseDetailScreen(shop: shop, address: deliveryaddress[2]['address'], cart: cart),
+                  builder: (context) => PurchaseDetailScreen(shop: shop, name: deliveryaddress[0]['name'], nickname: deliveryaddress[1]['nickname'], address: deliveryaddress[3]['address'], cart: cart),
                 )
             );
             if(result == "home"){
