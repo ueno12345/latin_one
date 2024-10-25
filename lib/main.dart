@@ -219,7 +219,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 tooltip: 'Inbox',
                 onPressed: () {
-                  ChangeInboxFlag(inbox_flag);
+                  ChangeInboxFlag(1);
                 }
             ),
           ],
