@@ -17,6 +17,15 @@ import './orderscreen.dart';
 import './shopscreen.dart';
 import './inboxscreen.dart';
 
+void subscribeToTopic(String topic) async {
+  await FirebaseMessaging.instance.subscribeToTopic(topic);
+  print('Subscribed to $topic');
+}
+
+void unsubscribeFromTopic(String topic) async {
+  await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
+  print('Unsubscribed from $topic');
+}
 
 void main() async{
   await dotenv.load();
@@ -30,6 +39,10 @@ void main() async{
 
   final fcmToken = await messagingInstance.getToken();
   debugPrint('FCM TOKEN: $fcmToken');
+
+  subscribeToTopic('information');
+  subscribeToTopic('product');
+  subscribeToTopic('shop');
 
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   if (Platform.isAndroid) {
@@ -129,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _screens = [
       HomeScreen(ChangeIndex: ChangeIndex, ChangeInboxFlag: ChangeInboxFlag),
-      OrderScreen(),
+      OrderScreen(ChangeIndex: ChangeIndex),
       ShopsScreen(),
       InboxScreen()
     ];
