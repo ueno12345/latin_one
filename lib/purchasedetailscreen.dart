@@ -3,8 +3,8 @@ import 'package:latin_one/homescreen.dart';
 import 'package:latin_one/main.dart';
 
 class PurchaseDetailScreen extends StatefulWidget {
-  final shop, address, cart;
-  const PurchaseDetailScreen({super.key, required this.shop, required this.address, required this.cart});
+  final shop, name, nickname, address, cart;
+  const PurchaseDetailScreen({super.key, required this.shop, required this.name, required this.nickname, required this.address, required this.cart});
 
   @override
   State<PurchaseDetailScreen> createState() => _PurchaseDetailScreenState();
@@ -85,7 +85,7 @@ class _PurchaseDetailScreenState extends State<PurchaseDetailScreen> {
                             Container(
                               padding: EdgeInsets.fromLTRB(6.0, 0.0, 0.0, 0.0),
                               child: Text(
-                                "nickname",
+                              "${widget.nickname}",
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 32,
@@ -101,7 +101,7 @@ class _PurchaseDetailScreenState extends State<PurchaseDetailScreen> {
                         padding: EdgeInsets.all(8.0),
                         alignment: Alignment.center,
                         child: Text(
-                          "latinOne_1さん",
+                          "${widget.name}",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 40,
@@ -144,7 +144,7 @@ class _PurchaseDetailScreenState extends State<PurchaseDetailScreen> {
                         padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
                         alignment: Alignment.topLeft,
                         child: Text(
-                          "Address",
+                          "${widget.address}",
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 24,
