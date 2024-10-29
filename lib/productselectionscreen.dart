@@ -16,14 +16,17 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     // データを取得するための関数
-    Future<Map<String, dynamic>> getDocumentData() async {
-      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+    Future<List<Map<String, dynamic>>> getDocumentData() async {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('shops')
-          .doc('javanican')
+          .doc('JAVANICAN')
           .collection('products')
-          .doc('beans')
           .get();
-      return snapshot.data() as Map<String, dynamic>;
+      List<Map<String, dynamic>> beanList = [];
+      for (var bean in snapshot.docs) {
+        beanList.add(bean.data() as Map<String, dynamic>);
+      }
+      return beanList;
     }
 
     return WillPopScope(
@@ -50,17 +53,15 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
                   }
                   // エラー時に表示するWidget
                   if (snapshot.hasError) {
-                    print(snapshot.error);
-                    return Text('Error');
+                    return const Text('Error');
                   }
 
                   // データが取得できなかったときに表示するWidget
                   if (!snapshot.hasData) {
-                    return Text('No Data');
+                    return const Text('No Data');
                   }
 
-                  List<MapEntry<String, dynamic>> beanList = snapshot.data!.entries.toList();
-                  print(beanList);
+                  List<Map<String, dynamic>> beanList = snapshot.data!;
                   // 取得したデータを表示するWidget
                   return GridView.builder(
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -68,9 +69,8 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
                       ),
                       itemCount: beanList.length,
                       itemBuilder: (context, index) {
-                        final beanEntry = beanList[index];
-                        final bean = beanEntry.value;
-                        return products(bean['image'], bean['name'], bean['price'], bean['description']);
+                        final bean = beanList[index];
+                        return products(bean['imagePath'], bean['productName'], bean['price'], bean['description']);
                       }
                   );
                 }
@@ -83,7 +83,7 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
     const containerHeight = 180.0;
     const containerWidth = 180.0;
     return Container(
-      margin: EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(8.0),
       height: containerHeight,
       width: containerWidth,
       child: GestureDetector(
@@ -95,31 +95,24 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
                 )
             );
             (widget.cart).add({'id':widget.id, 'name':name.toString(), 'pieces':pieces.toString(), 'price':price.toString()});
-            print(widget.cart);
             widget.id++;
         },
         child: Column(
           children: [
             Expanded(
               flex: 4,
-              child:
-              Container(
-                child: Image.asset(
-                  //image.toString(),
-                  "images/image1.jpg",
-                  fit: BoxFit.cover,
-                ),
+              child: Image.asset(
+                //image.toString(),
+                "images/image1.jpg",
+                fit: BoxFit.cover,
               ),
             ),
             Expanded(
               flex: 1,
-              child:
-              Container(
-                child: Text(
-                  name.toString(),
-                  style: TextStyle(
-                      fontSize: 16
-                  ),
+              child: Text(
+                name.toString(),
+                style: const TextStyle(
+                    fontSize: 16
                 ),
               ),
             ),
@@ -128,23 +121,18 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
                 child:
                 Row(
                   children: [
-                    Container(
-                      child: Text(
-                        "￥" + price.toString(),
-                        style: TextStyle(
-                            fontSize: 20
-                        ),
+                    Text(
+                      "￥$price",
+                      style: const TextStyle(
+                          fontSize: 20
                       ),
                     ),
-                    Container(
-
-                      child: Text(
-                        " (100g)",
-                        style: TextStyle(
-                            fontSize: 20
-                        ),
+                    const Text(
+                      " (100g)",
+                      style: TextStyle(
+                          fontSize: 20
                       ),
-                    )
+                    ),
                   ],
                 )
 
@@ -158,23 +146,23 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
     );
   }
 
-  Widget _DecideButton() {
+  Widget _decideButton() {
     return Container(
-      margin: EdgeInsets.all(4.0),
+      margin: const EdgeInsets.all(4.0),
       alignment: Alignment.bottomCenter,
       child: ElevatedButton(
-        child: Text(
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
+        onPressed: () async {
+          // カートを返す
+          Navigator.pop(context, widget.cart);
+        },
+        child: const Text(
           '選択',
           style: TextStyle(
             color: Colors.white,
             fontSize: 24,
           ),
         ),
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
-        onPressed: () async {
-          // カートを返す
-          Navigator.pop(context, widget.cart);
-        },
       ),
     );
   }
