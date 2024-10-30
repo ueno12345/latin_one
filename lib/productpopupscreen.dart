@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ProductPopupScreen extends StatefulWidget {
@@ -47,7 +44,7 @@ class _ProductPopupScreenState extends State<ProductPopupScreen> {
           ),
           Container(
             height: containerHeight*3/4,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               border: Border(
                 top: BorderSide(
                   color: Colors.grey,
@@ -59,7 +56,7 @@ class _ProductPopupScreenState extends State<ProductPopupScreen> {
                   child: Container(
                           child: Text(
                             widget.description.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.black,
                               fontSize: 20,
                             ),
@@ -69,7 +66,7 @@ class _ProductPopupScreenState extends State<ProductPopupScreen> {
                   ),
                 ),
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               border: Border(
                 top: BorderSide(
                   color: Colors.grey,
@@ -83,9 +80,9 @@ class _ProductPopupScreenState extends State<ProductPopupScreen> {
                 Expanded(
                   flex: 1,
                   child: Container(
-                    padding: EdgeInsets.fromLTRB(8.0,0.0,0.0,0.0),
+                    padding: const EdgeInsets.fromLTRB(8.0,0.0,0.0,0.0),
                     alignment: Alignment.topLeft,
-                    child: Text(
+                    child: const Text(
                       "数量",
                       style: TextStyle(
                         color: Colors.black,
@@ -101,8 +98,7 @@ class _ProductPopupScreenState extends State<ProductPopupScreen> {
                     child: Row(
                       children: [
                         GestureDetector(
-                          child: Icon(
-                            // minus button
+                          child: const Icon(
                               Icons.remove_circle_outline
                           ),
                           onTap: (){
@@ -112,17 +108,16 @@ class _ProductPopupScreenState extends State<ProductPopupScreen> {
                           },
                         ),
                         Container(
-                          padding: EdgeInsets.fromLTRB(10.0,0.0,10.0,0.0),
+                          padding: const EdgeInsets.fromLTRB(10.0,0.0,10.0,0.0),
                           child: Text(
                             piece.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 30
                             ),
                           ),
                         ),
                         GestureDetector(
-                          child: Icon(
-                            // plus button
+                          child: const Icon(
                               Icons.add_circle_outline
                           ),
                           onTap: () {
@@ -138,7 +133,7 @@ class _ProductPopupScreenState extends State<ProductPopupScreen> {
               ],
             ),
           ),
-      _SelectButton()
+      _selectButton()
         ],
       ),
     );
@@ -156,12 +151,12 @@ class _ProductPopupScreenState extends State<ProductPopupScreen> {
     });
   }
 
-  Widget _SelectButton() {
+  Widget _selectButton() {
     return Container(
-      margin: EdgeInsets.all(4.0),
+      margin: const EdgeInsets.all(4.0),
       alignment: Alignment.bottomCenter,
       child: ElevatedButton(
-        child: Text(
+        child: const Text(
           '選択',
           style: TextStyle(
             color: Colors.white,

@@ -27,57 +27,58 @@ class _ShopsScreenState extends State<ShopsScreen> {
       return shopList;
     }
     return Scaffold(
-        body: FutureBuilder(
-          future: getDocumentData(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return Container(
-                alignment: Alignment.center,
-                child: const CircularProgressIndicator(),
-              );
-            }
-            // エラー時に表示するWidget
-            if (snapshot.hasError) {
-              return const Text('Error');
-            }
+      body: FutureBuilder(
+        future: getDocumentData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return Container(
+              alignment: Alignment.center,
+              child: const CircularProgressIndicator(),
+            );
+          }
+          // エラー時に表示するWidget
+          if (snapshot.hasError) {
+            return const Text('Error');
+          }
 
-            // データが取得できなかったときに表示するWidget
-            if (!snapshot.hasData) {
-              return const Text('No Data');
-            }
+          // データが取得できなかったときに表示するWidget
+          if (!snapshot.hasData) {
+            return const Text('No Data');
+          }
 
-            List<_ShopMarker> shopMarkerList = [];
+          List<_ShopMarker> shopMarkerList = [];
 
-            for (final marker in snapshot.data!) {
-              shopMarkerList.add(_ShopMarker(marker, context));
-            }
+          for (final marker in snapshot.data!) {
+            shopMarkerList.add(_ShopMarker(marker, context));
+          }
 
-            return FlutterMap(
-              options: const MapOptions(
-                initialCenter: LatLng(33.57467445693053, 133.57844092600828),
-                initialZoom: 13.0,
-                minZoom: 9.0,
-                maxZoom: 18.0,
+          return FlutterMap(
+            options: const MapOptions(
+              initialCenter: LatLng(33.57467445693053, 133.57844092600828),
+              initialZoom: 13.0,
+              minZoom: 9.0,
+              maxZoom: 18.0,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               ),
-              children: [
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                ),
-                MarkerLayer(
-                  markers: shopMarkerList,
-                ),
-                RichAttributionWidget(
-                  attributions: [
-                    TextSourceAttribution(
-                      'OpenStreetMap contributors',
-                      onTap: () =>
-                          launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
-                    ),
-                  ],
-                ),
-              ],
-            );},
-        )
+              MarkerLayer(
+                markers: shopMarkerList,
+              ),
+              RichAttributionWidget(
+                attributions: [
+                  TextSourceAttribution(
+                    'OpenStreetMap contributors',
+                    onTap: () =>
+                        launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
+      )
     );
   }
 }
@@ -134,7 +135,7 @@ void _showPopupMenu(Map<String, dynamic> shop, TapDownDetails details, BuildCont
                   padding: const EdgeInsets.all(8.0),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    shop['name'].toString(),
+                    shop['shopName'].toString(),
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 24,

@@ -4,7 +4,8 @@ import './productpopupscreen.dart';
 class ProductSelectionScreen extends StatefulWidget {
   List<Map<String, dynamic>> cart;
   int id;
-  ProductSelectionScreen({super.key, required this.cart, required this.id});
+  final shop;
+  ProductSelectionScreen({super.key, required this.cart, required this.id, required this.shop});
 
   @override
   State<ProductSelectionScreen> createState() => _ProductSelectionScreenState();
@@ -19,7 +20,7 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
     Future<List<Map<String, dynamic>>> getDocumentData() async {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('shops')
-          .doc('JAVANICAN')
+          .doc(widget.shop)
           .collection('products')
           .get();
       List<Map<String, dynamic>> beanList = [];
@@ -30,52 +31,52 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
     }
 
     return WillPopScope(
-        onWillPop: () {
-          Navigator.pop(context, widget.cart);
-          return Future.value(false);
-        },
-        child: Scaffold(
-            appBar: AppBar(
-              title: const Text(
-                'Products',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              backgroundColor: Colors.amber,
+      onWillPop: () {
+        Navigator.pop(context, widget.cart);
+        return Future.value(false);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Products',
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
             ),
-            body: FutureBuilder(
-                future: getDocumentData(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState != ConnectionState.done) {
-                    return const CircularProgressIndicator();
-                  }
-                  // エラー時に表示するWidget
-                  if (snapshot.hasError) {
-                    return const Text('Error');
-                  }
+          ),
+          backgroundColor: Colors.amber,
+        ),
+        body: FutureBuilder(
+          future: getDocumentData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const CircularProgressIndicator();
+            }
+            // エラー時に表示するWidget
+            if (snapshot.hasError) {
+              return const Text('Error');
+            }
 
-                  // データが取得できなかったときに表示するWidget
-                  if (!snapshot.hasData) {
-                    return const Text('No Data');
-                  }
+            // データが取得できなかったときに表示するWidget
+            if (!snapshot.hasData) {
+              return const Text('No Data');
+            }
 
-                  List<Map<String, dynamic>> beanList = snapshot.data!;
-                  // 取得したデータを表示するWidget
-                  return GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                      ),
-                      itemCount: beanList.length,
-                      itemBuilder: (context, index) {
-                        final bean = beanList[index];
-                        return products(bean['imagePath'], bean['productName'], bean['price'], bean['description']);
-                      }
-                  );
-                }
-            )
+            List<Map<String, dynamic>> beanList = snapshot.data!;
+            // 取得したデータを表示するWidget
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+              ),
+              itemCount: beanList.length,
+              itemBuilder: (context, index) {
+                final bean = beanList[index];
+                return products(bean['imagePath'], bean['productName'], bean['price'], bean['description']);
+              }
+            );
+          }
         )
+      )
     );
   }
 
@@ -88,14 +89,14 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
       width: containerWidth,
       child: GestureDetector(
         onTap: () async {
-            pieces = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProductPopupScreen(image: image, product: name.toString(), description: description.toString()),
-                )
-            );
-            (widget.cart).add({'id':widget.id, 'name':name.toString(), 'pieces':pieces.toString(), 'price':price.toString()});
-            widget.id++;
+          pieces = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductPopupScreen(image: image, product: name.toString(), description: description.toString()),
+            )
+          );
+          (widget.cart).add({'id':widget.id, 'name':name.toString(), 'pieces':pieces.toString(), 'price':price.toString()});
+          widget.id++;
         },
         child: Column(
           children: [
@@ -117,32 +118,28 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
               ),
             ),
             Expanded(
-                flex: 1,
-                child:
-                Row(
-                  children: [
-                    Text(
-                      "￥$price",
-                      style: const TextStyle(
-                          fontSize: 20
-                      ),
+              flex: 1,
+              child:
+              Row(
+                children: [
+                  Text(
+                    "￥$price",
+                    style: const TextStyle(
+                      fontSize: 20
                     ),
-                    const Text(
-                      " (100g)",
-                      style: TextStyle(
-                          fontSize: 20
-                      ),
+                  ),
+                  const Text(
+                    " (100g)",
+                    style: TextStyle(
+                      fontSize: 20
                     ),
-                  ],
-                )
-
+                  ),
+                ],
+              )
             )
           ],
         ),
-
       )
-
-
     );
   }
 

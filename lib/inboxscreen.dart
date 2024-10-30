@@ -33,16 +33,14 @@ class _InboxScreenState extends State<InboxScreen> {
               }
               // エラー時に表示するWidget
               if (snapshot.hasError) {
-                print(snapshot.error);
-                return Text('Error');
+                return const Text('Error');
               }
 
               // データが取得できなかったときに表示するWidget
               if (!snapshot.hasData) {
-                return Text('No Data');
+                return const Text('No Data');
               }
 
-              print(snapshot.data![0].entries);
               List<MapEntry<String, dynamic>> informationList = snapshot.data![0].entries.toList();
               List<MapEntry<String, dynamic>> productInformationList = snapshot.data![1].entries.toList();
               List<MapEntry<String, dynamic>> shopInformationList = snapshot.data![2].entries.toList();

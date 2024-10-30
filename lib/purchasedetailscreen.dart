@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:latin_one/homescreen.dart';
-import 'package:latin_one/main.dart';
 
 class PurchaseDetailScreen extends StatefulWidget {
   final shop, name, nickname, address, cart;
@@ -15,21 +13,6 @@ class _PurchaseDetailScreenState extends State<PurchaseDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    int currentPageIndex = 0;
-    int inbox_flag = 0;
-
-    void ChangeInboxFlag(int flag) {
-      setState(() {
-        inbox_flag = flag;
-      });
-    }
-
-    void ChangeIndex(int index) {
-      setState(() {
-        inbox_flag = 0;
-        currentPageIndex = index;
-      });
-    }
 
     return WillPopScope(
         onWillPop: () {
@@ -47,8 +30,8 @@ class _PurchaseDetailScreenState extends State<PurchaseDetailScreen> {
               Container(
                 alignment: Alignment.centerLeft,
                 height: containerHeight,
-                padding: EdgeInsets.all(8.0),
-                child: Text(
+                padding: const EdgeInsets.all(8.0),
+                child: const Text(
                   "注文を承りました\nお客様のご来店をお待ち\nしています",
                   style: TextStyle(
                     color: Colors.black,
@@ -58,7 +41,7 @@ class _PurchaseDetailScreenState extends State<PurchaseDetailScreen> {
               ),
               Container(
                 height: containerHeight * 3 / 4,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   border: Border(
                     top: BorderSide(
                       color: Colors.grey,
@@ -73,20 +56,20 @@ class _PurchaseDetailScreenState extends State<PurchaseDetailScreen> {
                       child: Row(
                           children: <Widget>[
                             Container(
-                              padding: EdgeInsets.fromLTRB(
+                              padding: const EdgeInsets.fromLTRB(
                                   100.0, 0.0, 0.0, 0.0),
 //                        alignment: Alignment.center,
-                              child: Icon(
+                              child: const Icon(
                                 Icons.local_drink_rounded,
                                 color: Colors.green,
                                 size: 32,
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.fromLTRB(6.0, 0.0, 0.0, 0.0),
+                              padding: const EdgeInsets.fromLTRB(6.0, 0.0, 0.0, 0.0),
                               child: Text(
                               "${widget.nickname}",
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 32,
                                 ),
@@ -98,11 +81,11 @@ class _PurchaseDetailScreenState extends State<PurchaseDetailScreen> {
                     Expanded(
                       flex: 3,
                       child: Container(
-                        padding: EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
                         alignment: Alignment.center,
                         child: Text(
                           "${widget.name}",
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 40,
                           ),
@@ -113,7 +96,7 @@ class _PurchaseDetailScreenState extends State<PurchaseDetailScreen> {
                 ),
               ),
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   border: Border(
                     top: BorderSide(
                       color: Colors.grey,
@@ -127,11 +110,11 @@ class _PurchaseDetailScreenState extends State<PurchaseDetailScreen> {
                     Expanded(
                       flex: 1,
                       child: Container(
-                        padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
                         alignment: Alignment.bottomLeft,
                         child: Text(
                           "${widget.shop}",
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 28,
                           ),
@@ -141,11 +124,11 @@ class _PurchaseDetailScreenState extends State<PurchaseDetailScreen> {
                     Expanded(
                       flex: 2,
                       child: Container(
-                        padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
                         alignment: Alignment.topLeft,
                         child: Text(
                           "${widget.address}",
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.grey,
                             fontSize: 24,
                           ),
@@ -157,7 +140,7 @@ class _PurchaseDetailScreenState extends State<PurchaseDetailScreen> {
               ),
               Container(
                 height: containerHeight * 2,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   border: Border(
                     top: BorderSide(
                       color: Colors.grey,
@@ -172,16 +155,16 @@ class _PurchaseDetailScreenState extends State<PurchaseDetailScreen> {
                       child: Row(
                           children: <Widget>[
                             Container(
-                              padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-                              child: Icon(
+                              padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                              child: const Icon(
                                 Icons.store_mall_directory_rounded,
                                 color: Colors.grey,
                                 size: 28,
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.fromLTRB(6.0, 0.0, 0.0, 0.0),
-                              child: Text(
+                              padding: const EdgeInsets.fromLTRB(6.0, 0.0, 0.0, 0.0),
+                              child: const Text(
                                 "How to pick up",
                                 style: TextStyle(
                                   color: Colors.grey,
@@ -195,9 +178,9 @@ class _PurchaseDetailScreenState extends State<PurchaseDetailScreen> {
                     Expanded(
                       flex: 2,
                       child: Container(
-                        padding: EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
+                        padding: const EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
                         alignment: Alignment.topLeft,
-                        child: Text(
+                        child: const Text(
                           "1.受取時間を目安に店舗に行く\n2.商品の受取カウンターへ\n3.商品ラベルの受取番号(またはニックネーム)を\n確認し、受け取る",
                           style: TextStyle(
                             color: Colors.black,
@@ -209,9 +192,9 @@ class _PurchaseDetailScreenState extends State<PurchaseDetailScreen> {
                     Expanded(
                       flex: 2,
                       child: Container(
-                        padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
                         alignment: Alignment.topLeft,
-                        child: Text(
+                        child: const Text(
                           "ドライブスルーレーンでの受け取りはできませ\nん、店内でお受け取りください",
                           style: TextStyle(
                             color: Colors.grey,
