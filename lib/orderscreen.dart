@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import './shopselectionscreen.dart';
 import './deliveryaddressscreen.dart';
 import './productselectionscreen.dart';
@@ -8,8 +6,8 @@ import './purchasedetailscreen.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 class OrderScreen extends StatefulWidget {
-  const OrderScreen({super.key, required this.ChangeIndex});
-  final Function(int) ChangeIndex;
+  const OrderScreen({super.key, required this.changeIndex});
+  final Function(int) changeIndex;
 
   @override
   State<OrderScreen> createState() => _OrderScreenState();
@@ -40,10 +38,10 @@ class _OrderScreenState extends State<OrderScreen> {
           Column(
             children: <Widget>[
               Container(
-                margin: EdgeInsets.all(4.0),
+                margin: const EdgeInsets.all(4.0),
                 height: containerHeight/2,
                 alignment: Alignment.center,
-                child: Text(
+                child: const Text(
                   'Order & Pay',
                   style: TextStyle(
                     color: Colors.black,
@@ -60,7 +58,7 @@ class _OrderScreenState extends State<OrderScreen> {
               _productselectionContainer(),
             ],
           ),
-          Padding(
+          const Padding(
               padding: EdgeInsets.all(4.0)
           ),
           _cartdisplayContainer(),
@@ -75,10 +73,10 @@ class _OrderScreenState extends State<OrderScreen> {
   // Containers
   Widget _shopselectionContainer() {
     return Container(
-      margin: EdgeInsets.all(4.0),
+      margin: const EdgeInsets.all(4.0),
       height: containerHeight,
       alignment: Alignment.center,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(
           top: BorderSide(
             color: Colors.grey,
@@ -91,7 +89,7 @@ class _OrderScreenState extends State<OrderScreen> {
           shop = await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ShopSelectionScreen(),
+                builder: (context) => const ShopSelectionScreen(),
               )
           );
           if(shop != null) {
@@ -101,11 +99,11 @@ class _OrderScreenState extends State<OrderScreen> {
           }
         },
         child: Container(
-          padding: EdgeInsets.all(4.0),
+          padding: const EdgeInsets.all(4.0),
           alignment: Alignment.centerLeft,
           child: Text(
             _shop,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 24,
             ),
@@ -117,10 +115,10 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Widget _deliveryaddressContainer() {
     return Container(
-      margin: EdgeInsets.all(4.0),
+      margin: const EdgeInsets.all(4.0),
       height: containerHeight,
       alignment: Alignment.center,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(
           top: BorderSide(
             color: Colors.grey,
@@ -134,7 +132,7 @@ class _OrderScreenState extends State<OrderScreen> {
             deliveryaddress = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DeliveryAddressScreen(),
+                  builder: (context) => const DeliveryAddressScreen(),
                 )
             );
 
@@ -147,11 +145,11 @@ class _OrderScreenState extends State<OrderScreen> {
           }
         },
         child: Container(
-          padding: EdgeInsets.all(4.0),
+          padding: const EdgeInsets.all(4.0),
           alignment: Alignment.centerLeft,
           child: Text(
             _address,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 24,
             ),
@@ -163,7 +161,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Widget _productselectionContainer() {
     return Container(
-      margin: EdgeInsets.all(4.0),
+      margin: const EdgeInsets.all(4.0),
       height: containerHeight,
       alignment: Alignment.center,
       child: GestureDetector(
@@ -172,7 +170,7 @@ class _OrderScreenState extends State<OrderScreen> {
             final List<Map<String, dynamic>> result = await Navigator.push<List<Map<String, dynamic>>>(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProductSelectionScreen(cart: cart, id:id),
+                  builder: (context) => ProductSelectionScreen(cart: cart, id: id, shop: shop),
                 )
             ) ?? cart;
             cart = result;
@@ -189,9 +187,9 @@ class _OrderScreenState extends State<OrderScreen> {
           }
         },
         child: Container(
-          padding: EdgeInsets.all(4.0),
+          padding: const EdgeInsets.all(4.0),
           alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             border: Border(
               top: BorderSide(
                 color: Colors.grey,
@@ -205,7 +203,7 @@ class _OrderScreenState extends State<OrderScreen> {
           ),
           child: Text(
             _cart,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 24,
             ),
@@ -217,22 +215,22 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Widget _cartdisplayContainer() {
     return Container(
-      margin: EdgeInsets.all(4.0),
+      margin: const EdgeInsets.all(4.0),
       alignment: Alignment.centerLeft,
       child: Column(
         children: [
           Container(
-            margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 12.0),
-            padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 12.0),
+            margin: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 12.0),
+            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 12.0),
             alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               border: Border(
                 bottom: BorderSide(
                   color: Colors.amber
                 ),
               )
             ),
-            child: Text(
+            child: const Text(
               'カート内容',
               style: TextStyle(
                 color: Colors.black,
@@ -255,7 +253,7 @@ class _OrderScreenState extends State<OrderScreen> {
             alignment: Alignment.centerRight,
             child: Text(
               "総合計" + ": " + "¥" + sum.toString(),
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.black,
                 fontSize: 24,
               ),
@@ -275,14 +273,14 @@ class _OrderScreenState extends State<OrderScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text("商品を削除しますか？"),
-                      content: Text("カートから選択した商品を削除します"),
+                      title: const Text("商品を削除しますか？"),
+                      content: const Text("カートから選択した商品を削除します"),
                       actions: [
                         ElevatedButton(
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            child: Text(
+                            child: const Text(
                               "キャンセル",
                             )
                         ),
@@ -293,9 +291,8 @@ class _OrderScreenState extends State<OrderScreen> {
                               Navigator.pop(context);
                               setState(() {
                               });
-                              print(cart);
                             },
-                            child: Text(
+                            child: const Text(
                               "OK",
                             )
                         ),
@@ -304,24 +301,24 @@ class _OrderScreenState extends State<OrderScreen> {
                   }
               );
             },
-            child: Icon(
+            child: const Icon(
                 Icons.remove_circle_outline
             )
         ),
         Container(
           child: Text(
             product['name'].toString(),
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 24,
             ),
           ),
         ),
         Container(
-          margin: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+          margin: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
           child: Text(
             product['pieces'].toString() + "点",
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 24,
             ),
@@ -330,7 +327,7 @@ class _OrderScreenState extends State<OrderScreen> {
         Expanded(child: Container()),
         Text(
           "¥" + (int.parse(product['price']) * int.parse(product['pieces'])).toString(),
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 24,
           ),
@@ -341,20 +338,20 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Widget _purchasedetailContainer() {
     return Container(
-      margin: EdgeInsets.all(4.0),
+      margin: const EdgeInsets.all(4.0),
       alignment: Alignment.bottomCenter,
       child: ElevatedButton(
         child: Text(
           '購入',
           style: TextStyle(
-            color: (shop != null && deliveryaddress != [] && cart.length > 0) ? Colors.black : Colors.white,
+            color: (shop != null && deliveryaddress != [] && cart.isNotEmpty) ? Colors.black : Colors.white,
             fontSize: 24,
           ),
         ),
         onPressed: () async {
-          if(shop != null && deliveryaddress != [] && cart.length > 0) {
+          if(shop != null && deliveryaddress != [] && cart.isNotEmpty) {
             //店へメールを送信
-            final _mailbody = 'ご注文内容';
+            const _mailbody = 'ご注文内容';
             final Email email = Email(
               body: _mailbody,
               subject: 'ご注文内容の受信(${deliveryaddress[0]['name']}様)',
@@ -371,12 +368,12 @@ class _OrderScreenState extends State<OrderScreen> {
             );
             if(result == "home"){
               setState(() {
-                widget.ChangeIndex(0);
+                widget.changeIndex(0);
               });
             }
           }
         },
-        style: ElevatedButton.styleFrom(backgroundColor: (shop != null && deliveryaddress != [] && cart.length > 0) ? Colors.amber : Colors.amber[100]),
+        style: ElevatedButton.styleFrom(backgroundColor: (shop != null && deliveryaddress != [] && cart.isNotEmpty) ? Colors.amber : Colors.amber[100]),
       ),
     );
   }

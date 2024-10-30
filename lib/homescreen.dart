@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.ChangeIndex, required this.ChangeInboxFlag});
+  const HomeScreen({super.key, required this.changeIndex, required this.changeInboxFlag});
 
-  final Function(int) ChangeIndex;
-  final Function(int) ChangeInboxFlag;
+  final Function(int) changeIndex;
+  final Function(int) changeInboxFlag;
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: containerHeight / 5,
                     child: Text(
                       title,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 20,
                         color: Colors.white
                       ),
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: containerHeight * 2 / 5,
                     child: Text(
                       description,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 30,
                         color: Colors.white
                       ),
@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: ElevatedButton(
         child: Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 20,
           ),
@@ -100,16 +100,16 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       switch (destination) {
         case 'Order':
-          widget.ChangeIndex(1);
+          widget.changeIndex(1);
           break;
         case 'Shops':
-          widget.ChangeIndex(2);
+          widget.changeIndex(2);
           break;
         case 'Inbox':
-          widget.ChangeInboxFlag(1);
+          widget.changeInboxFlag(1);
           break;
         default:
-          widget.ChangeIndex(0);
+          widget.changeIndex(0);
           break;
       }
     });

@@ -62,9 +62,9 @@ void main() async{
   // 通知設定の初期化を行う
   _initNotification();
 
-  // アプリ停止時に通知をタップした場合はgetInitialMessageでメッセージデータを取得できる
-  final message = await FirebaseMessaging.instance.getInitialMessage();
-  // 取得したmessageを利用した処理などを記載する
+  // // アプリ停止時に通知をタップした場合はgetInitialMessageでメッセージデータを取得できる
+  // final message = await FirebaseMessaging.instance.getInitialMessage();
+  // // 取得したmessageを利用した処理などを記載する
 
   runApp(const MyApp());
 }
@@ -96,17 +96,17 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int currentPageIndex = 0;
-  int inbox_flag = 0;
+  int inboxFlag = 0;
 
-  void ChangeInboxFlag(int flag) {
+  void changeInboxFlag(int flag) {
     setState(() {
-      inbox_flag = flag;
+      inboxFlag = flag;
     });
   }
 
-  void ChangeIndex(int index) {
+  void changeIndex(int index) {
     setState(() {
-      inbox_flag = 0;
+      inboxFlag = 0;
       currentPageIndex = index;
     });
   }
@@ -116,11 +116,11 @@ class _MyHomePageState extends State<MyHomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('ネットワーク接続がありません'),
-          content: Text('ネットワーク接続を確認してください'),
+          title: const Text('ネットワーク接続がありません'),
+          content: const Text('ネットワーク接続を確認してください'),
           actions: <Widget>[
             TextButton(
-              child: Text('戻る'),
+              child: const Text('戻る'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -141,10 +141,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _screens = [
-      HomeScreen(ChangeIndex: ChangeIndex, ChangeInboxFlag: ChangeInboxFlag),
-      OrderScreen(ChangeIndex: ChangeIndex),
-      ShopsScreen(),
-      InboxScreen()
+      HomeScreen(changeIndex: changeIndex, changeInboxFlag: changeInboxFlag),
+      OrderScreen(changeIndex: changeIndex),
+      const ShopsScreen(),
+      const InboxScreen()
     ];
 
     initConnectivity();
@@ -191,9 +191,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
-        if((inbox_flag == 1) | (currentPageIndex != 0)){
+        if((inboxFlag == 1) | (currentPageIndex != 0)){
           setState(() {
-            inbox_flag = 0;
+            inboxFlag = 0;
             currentPageIndex = 0;
           });
         }
@@ -208,26 +208,26 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(
             widget.title,
             style:
-            TextStyle(
+            const TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
           actions: <Widget>[
             IconButton(
-                icon: Badge(
+                icon: const Badge(
                   child: Icon(Icons.notifications_outlined),
                 ),
                 tooltip: 'Inbox',
                 onPressed: () {
-                  ChangeInboxFlag(1);
+                  changeInboxFlag(1);
                 }
             ),
           ],
         ),
         // body: _screens[currentPageIndex],
-        body: _ctr_screen(inbox_flag, currentPageIndex),
+        body: _ctrScreen(inboxFlag, currentPageIndex),
         bottomNavigationBar: NavigationBar(
-          onDestinationSelected: ChangeIndex,
+          onDestinationSelected: changeIndex,
           indicatorColor: Colors.amber,
           selectedIndex: currentPageIndex,
           destinations: const <Widget>[
@@ -253,9 +253,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   }
 
-  Widget _ctr_screen(int inbox_flag, int index){
-    if (inbox_flag == 1) {
-      return InboxScreen();
+  Widget _ctrScreen(int inboxFlag, int index){
+    if (inboxFlag == 1) {
+      return const InboxScreen();
     }else{
       return _screens[index];
     }
