@@ -351,7 +351,21 @@ class _OrderScreenState extends State<OrderScreen> {
         onPressed: () async {
           if(shop != null && deliveryaddress != [] && cart.isNotEmpty) {
             //店へメールを送信
-            const _mailbody = 'ご注文内容';
+            String _mailbody ='''
+
+ご注文内容は下記の通りになります．
+--------------
+配送先：
+${deliveryaddress[3]['address']}
+
+注文商品：
+${cart.map((product) => '${product['name']} ${product['pieces']}点').join('\n')}
+              
+注文合計：
+￥ ${sum}
+--------------
+              
+            ''';
             final Email email = Email(
               body: _mailbody,
               subject: 'ご注文内容の受信(${deliveryaddress[0]['name']}様)',
