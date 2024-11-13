@@ -50,8 +50,7 @@ class _InboxScreenState extends State<InboxScreen> {
                   length: 3,
                   child: Scaffold (
                     appBar: AppBar(
-                      title: const Text('Information'),
-                      bottom: const TabBar(
+                      title: const TabBar(
                         tabs: [
                           Tab(text: 'General'),
                           Tab(text: 'New Product'),

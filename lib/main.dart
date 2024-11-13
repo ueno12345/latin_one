@@ -12,10 +12,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import './firebase_options.dart';
-import './homescreen.dart';
-import './orderscreen.dart';
-import './shopscreen.dart';
-import './inboxscreen.dart';
+import './router.dart';
 
 void subscribeToTopic(String topic) async {
   await FirebaseMessaging.instance.subscribeToTopic(topic);
@@ -131,8 +128,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  late List<Widget> _screens;
-
   List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
@@ -140,12 +135,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _screens = [
-      HomeScreen(changeIndex: changeIndex, changeInboxFlag: changeInboxFlag),
-      OrderScreen(changeIndex: changeIndex),
-      const ShopsScreen(),
-      const InboxScreen()
-    ];
 
     initConnectivity();
 
@@ -219,15 +208,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 tooltip: 'Inbox',
                 onPressed: () {
-                  changeInboxFlag(1);
+                  goRouter.push('/Inbox');
                 }
             ),
           ],
         ),
-        // body: _screens[currentPageIndex],
-        body: _ctrScreen(inboxFlag, currentPageIndex),
+        body: MaterialApp.router(
+          routerConfig: goRouter,
+        ),
         bottomNavigationBar: NavigationBar(
-          onDestinationSelected: changeIndex,
+          onDestinationSelected: (int index) {
+            _switchTab(index);
+          },
           indicatorColor: Colors.amber,
           selectedIndex: currentPageIndex,
           destinations: const <Widget>[
@@ -253,11 +245,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   }
 
-  Widget _ctrScreen(int inboxFlag, int index){
-    if (inboxFlag == 1) {
-      return const InboxScreen();
-    }else{
-      return _screens[index];
+  void _switchTab(int index) {
+    setState(() {
+      currentPageIndex = index;
+    });
+    switch (index) {
+      case 0:
+        goRouter.go('/');
+        break;
+      case 1:
+        goRouter.go('/Order');
+        break;
+      case 2:
+        goRouter.go('/Shops');
     }
   }
 }

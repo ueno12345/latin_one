@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import './router.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.changeIndex, required this.changeInboxFlag});
+  const HomeScreen({super.key});
 
-  final Function(int) changeIndex;
-  final Function(int) changeInboxFlag;
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -100,16 +99,16 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       switch (destination) {
         case 'Order':
-          widget.changeIndex(1);
+          goRouter.go('/Order');
           break;
         case 'Shops':
-          widget.changeIndex(2);
+          goRouter.go('/Shops');
           break;
         case 'Inbox':
-          widget.changeInboxFlag(1);
+          goRouter.push('/Inbox');
           break;
         default:
-          widget.changeIndex(0);
+          goRouter.go('/');
           break;
       }
     });

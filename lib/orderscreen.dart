@@ -4,10 +4,10 @@ import './deliveryaddressscreen.dart';
 import './productselectionscreen.dart';
 import './purchasedetailscreen.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'router.dart';
 
 class OrderScreen extends StatefulWidget {
-  const OrderScreen({super.key, required this.changeIndex});
-  final Function(int) changeIndex;
+  const OrderScreen({super.key});
 
   @override
   State<OrderScreen> createState() => _OrderScreenState();
@@ -381,9 +381,7 @@ ${cart.map((product) => '${product['name']} ${product['pieces']}点').join('\n')
                 )
             );
             if(result == "home"){
-              setState(() {
-                widget.changeIndex(0);
-              });
+              goRouter.go('/');
             }
           }
         },
