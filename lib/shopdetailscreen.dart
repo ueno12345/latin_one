@@ -17,9 +17,9 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'JAVANICAN',
-            style: TextStyle(
+        title: Text(
+          widget.shop['shopName'],
+            style: const TextStyle(
                 color: Colors.red,
               ),
           ),
@@ -51,7 +51,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                       flex: 1,
                       child: GestureDetector(
                         onTap: () {
-                          _openPhoneApp(widget.shop['phone_number']);
+                          _openPhoneApp(widget.shop['phoneNumber']);
                         },
                         child: Container(
                           padding: const EdgeInsets.all(8.0),
@@ -82,7 +82,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                   ],
                 ),
               ),
-              _buildContainer('BUSINESS\nHOURS', widget.shop['business_hours']['open'] + '~' + widget.shop['business_hours']['close']),
+              _buildContainer('BUSINESS\nHOURS', widget.shop['businessHours']['openTime'] + '~' + widget.shop['businessHours']['closeTime']),
               _buildContainer('REGULAR\nHOLIDAY', 'Irregular'),
               _buildContainer('WIRELESS\nHOTSPOT', '後で決める'),
               _buildContainer('MOBILE\nPAYMENT', 'Cash'),
