@@ -3,8 +3,8 @@ import './shopselectionscreen.dart';
 import './deliveryaddressscreen.dart';
 import './productselectionscreen.dart';
 import './purchasedetailscreen.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'router.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -238,7 +238,7 @@ class _OrderScreenState extends State<OrderScreen> {
               ),
             ),
           ),
-          Container(
+          SizedBox(
             height: 200,
             child: ListView.separated(
               shrinkWrap: true,
@@ -252,7 +252,7 @@ class _OrderScreenState extends State<OrderScreen> {
           Container(
             alignment: Alignment.centerRight,
             child: Text(
-              "総合計" + ": " + "¥" + sum.toString(),
+              "総合計: ¥$sum",
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 24,
@@ -317,7 +317,7 @@ class _OrderScreenState extends State<OrderScreen> {
         Container(
           margin: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
           child: Text(
-            product['pieces'].toString() + "点",
+            "${product['pieces']}点",
             style: const TextStyle(
               color: Colors.black,
               fontSize: 24,
@@ -326,7 +326,7 @@ class _OrderScreenState extends State<OrderScreen> {
         ),
         Expanded(child: Container()),
         Text(
-          "¥" + (int.parse(product['price']) * int.parse(product['pieces'])).toString(),
+          "¥${int.parse(product['price']) * int.parse(product['pieces'])}",
           style: const TextStyle(
             color: Colors.black,
             fontSize: 24,
@@ -341,38 +341,36 @@ class _OrderScreenState extends State<OrderScreen> {
       margin: const EdgeInsets.all(4.0),
       alignment: Alignment.bottomCenter,
       child: ElevatedButton(
-        child: Text(
-          '購入',
-          style: TextStyle(
-            color: (shop != null && deliveryaddress != [] && cart.isNotEmpty) ? Colors.black : Colors.white,
-            fontSize: 24,
-          ),
-        ),
         onPressed: () async {
           if(shop != null && deliveryaddress != [] && cart.isNotEmpty) {
-            //店へメールを送信
-            String _mailbody ='''
-
-ご注文内容は下記の通りになります．
---------------
-配送先：
-${deliveryaddress[3]['address']}
-
-注文商品：
-${cart.map((product) => '${product['name']} ${product['pieces']}点').join('\n')}
-              
-注文合計：
-￥ ${sum}
---------------
-              
-            ''';
-            final Email email = Email(
-              body: _mailbody,
-              subject: 'ご注文内容の受信(${deliveryaddress[0]['name']}様)',
-              recipients: ['${deliveryaddress[2]['mail']}'],
-              isHTML: false,
+            // Order ID を取得
+            final orderCounterDoc = FirebaseFirestore.instance.collection("topicCounters").doc("order");
+            orderCounterDoc.get().then(
+                  (DocumentSnapshot doc) {
+                    final orderIdMap = doc.data() as Map<String, dynamic>;
+                    num orderId = orderIdMap['currentId'];
+                    // Order インスタンスを作成
+                    var order = {
+                      orderId.toString() : {
+                        'order-time' : DateTime.now(),
+                        '氏名' : deliveryaddress[0]['name'].toString(),
+                        'ニックネーム' : deliveryaddress[1]['nickname'].toString(),
+                        'mail-address' : deliveryaddress[2]['mail'].toString(),
+                        '店舗' : _shop,
+                        '配送先' : deliveryaddress[3]['address'],
+                        '注文商品' : cart,
+                        '注文合計' : sum,
+                        '配送状況' : false,
+                      },
+                    };
+                    // Order を FireStore に追加
+                    FirebaseFirestore.instance.collection('order').doc('order').set(order, SetOptions(merge: true));
+                    // Order ID を更新
+                    orderId += 1;
+                    FirebaseFirestore.instance.collection('topicCounters').doc('order').set({'currentId' : orderId});
+                  },
+              onError: (e) => print("Error getting document: $e"),
             );
-            await FlutterEmailSender.send(email);
 
             String result = await Navigator.push(
                 context,
@@ -386,6 +384,13 @@ ${cart.map((product) => '${product['name']} ${product['pieces']}点').join('\n')
           }
         },
         style: ElevatedButton.styleFrom(backgroundColor: (shop != null && deliveryaddress != [] && cart.isNotEmpty) ? Colors.amber : Colors.amber[100]),
+        child: Text(
+          '購入',
+          style: TextStyle(
+            color: (shop != null && deliveryaddress != [] && cart.isNotEmpty) ? Colors.black : Colors.white,
+            fontSize: 24,
+          ),
+        ),
       ),
     );
   }
