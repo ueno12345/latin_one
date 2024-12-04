@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import './shopselectionscreen.dart';
 import './deliveryaddressscreen.dart';
 import './productselectionscreen.dart';
@@ -226,7 +228,7 @@ class _OrderScreenState extends State<OrderScreen> {
             decoration: const BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: Colors.amber
+                  color: Colors.grey
                 ),
               )
             ),
@@ -305,32 +307,44 @@ class _OrderScreenState extends State<OrderScreen> {
                 Icons.remove_circle_outline
             )
         ),
-        Container(
-          child: Text(
-            product['name'].toString(),
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 24,
-            ),
+        Expanded(
+          flex: 3,
+          child: Container(
+            margin: const EdgeInsets.all(4.0),
+              child: Text(
+                product['name'].toString(),
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              )),
+        ),
+        Expanded(
+          flex: 1,
+          child: Container(
+              margin: const EdgeInsets.all(4.0),
+              child: Text(
+                "${product['pieces']}点",
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              )
           ),
         ),
-        Container(
-          margin: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-          child: Text(
-            "${product['pieces']}点",
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 24,
-            ),
-          ),
-        ),
-        Expanded(child: Container()),
-        Text(
-          "¥${int.parse(product['price']) * int.parse(product['pieces'])}",
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 24,
-          ),
+        Expanded(
+            flex: 1,
+            child: Container(
+                margin: const EdgeInsets.all(4.0),
+                child: Text(
+                  "¥${int.parse(product['price']) * int.parse(product['pieces'])}",
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.right,
+                )
+            )
         ),
       ],
     );
