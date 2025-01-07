@@ -242,13 +242,15 @@ class _OrderScreenState extends State<OrderScreen> {
           ),
           SizedBox(
             height: 200,
-            child: ListView.separated(
-              shrinkWrap: true,
-              itemCount: cart.length,
-              separatorBuilder: (BuildContext context, int index) => const Divider(),
-              itemBuilder: (BuildContext context, int index) {
-                return _selectedProduct(cart[index]);
-              },
+            child: Scrollbar(
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: cart.length,
+                separatorBuilder: (BuildContext context, int index) => const Divider(),
+                itemBuilder: (BuildContext context, int index) {
+                  return _selectedProduct(cart[index]);
+                },
+              ),
             ),
           ),
           Container(
