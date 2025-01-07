@@ -34,8 +34,9 @@ LatinOne では，以下の機能が利用できる．
 以下の画像は，LatinOne の店舗検索画面である．  
 アプリ下側にある「Shops」タブを押下すると，店舗検索画面に遷移する．  
 ![店舗検索画面](./images/shops.png "店舗検索画面")  
-店舗検索画面で店舗を選択すると，上記のように店舗にピンが立つ．  
-また，ピンを押下すると，以下のようにその店舗の情報が表示される．
+店舗検索画面では，上記のように各店舗の箇所にピンが立つ．  
+また，ピンを押下すると，以下のようにその店舗の情報が表示される．  
+![店舗情報画面](./images/shopdetail.png "店舗情報画面")  
 
 ### 3\. 店舗からのお知らせ受取
 以下の画像は，LatinOne のお知らせ受取画面である．  
@@ -44,8 +45,9 @@ LatinOne では，以下の機能が利用できる．
 お知らせ受取画面では，新商品や新店舗などのお知らせを確認できる．
 
 # Requirements
-自分の環境
-flutter や androidstudio のバージョンなど
+* flutter 3.19.5
+* AndroidStudio Jellyfish
+
 
 
 # Install and Setup
@@ -56,5 +58,18 @@ flutter や androidstudio のバージョンなど
     $ git clone https://github.com/ueno12345/latin_one.git
     ```
 - run
-  - AndroidStudio 上で動作させる．
-  - flutter run とか flutter pub get とか
+  - AndroidStudio 上で動作させることを想定している．
+  1. パッケージの読み込み  
+      - 以下のコマンドを実行し，アプリの動作に必要なパッケージを読み込む．
+
+        ```
+        $ flutter pub get
+        ```
+  2. アプリの実行  
+      - 以下のコマンドを実行し，アプリを実行する．
+
+        ```
+        $ flutter run
+        ```
+
+- .env の説明
