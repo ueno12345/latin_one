@@ -4,7 +4,7 @@ import './productpopupscreen.dart';
 class ProductSelectionScreen extends StatefulWidget {
   List<Map<String, dynamic>> cart;
   int id;
-  final shop;
+  final dynamic shop;
   ProductSelectionScreen({super.key, required this.cart, required this.id, required this.shop});
 
   @override
@@ -30,12 +30,7 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
       return beanList;
     }
 
-    return WillPopScope(
-      onWillPop: () {
-        Navigator.pop(context, widget.cart);
-        return Future.value(false);
-      },
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: const Text(
             'Products',
@@ -47,36 +42,40 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
           backgroundColor: Colors.amber,
         ),
         body: FutureBuilder(
-          future: getDocumentData(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const CircularProgressIndicator();
-            }
-            // エラー時に表示するWidget
-            if (snapshot.hasError) {
-              return const Text('Error');
-            }
-
-            // データが取得できなかったときに表示するWidget
-            if (!snapshot.hasData) {
-              return const Text('No Data');
-            }
-
-            List<Map<String, dynamic>> beanList = snapshot.data!;
-            // 取得したデータを表示するWidget
-            return GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-              ),
-              itemCount: beanList.length,
-              itemBuilder: (context, index) {
-                final bean = beanList[index];
-                return products(bean['imagePath'], bean['productName'], bean['price'], bean['description']);
+            future: getDocumentData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const CircularProgressIndicator();
               }
-            );
-          }
+              // エラー時に表示するWidget
+              if (snapshot.hasError) {
+                return const Text('Error');
+              }
+
+              // データが取得できなかったときに表示するWidget
+              if (!snapshot.hasData) {
+                return const Text('No Data');
+              }
+
+              List<Map<String, dynamic>> beanList = snapshot.data!;
+              // 取得したデータを表示するWidget
+              return Stack(
+                children: [
+                  GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                      ),
+                      itemCount: beanList.length,
+                      itemBuilder: (context, index) {
+                        final bean = beanList[index];
+                        return products(bean['imagePath'], bean['productName'], bean['price'], bean['description']);
+                      }
+                  ),
+                  _decideButton(),
+                ],
+              );
+            }
         )
-      )
     );
   }
 
@@ -145,16 +144,20 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
 
   Widget _decideButton() {
     return Container(
-      margin: const EdgeInsets.all(4.0),
+      margin: const EdgeInsets.all(8.0),
       alignment: Alignment.bottomCenter,
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.amber,
+          minimumSize: const Size(44.0, 44.0),
+        ),
         onPressed: () async {
           // カートを返す
           Navigator.pop(context, widget.cart);
+          return Future.value();
         },
         child: const Text(
-          '選択',
+          'OK',
           style: TextStyle(
             color: Colors.white,
             fontSize: 24,
