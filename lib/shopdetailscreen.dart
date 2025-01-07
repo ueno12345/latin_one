@@ -84,7 +84,6 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
               ),
               _buildContainer('BUSINESS\nHOURS', widget.shop['businessHours']['openTime'] + '~' + widget.shop['businessHours']['closeTime']),
               _buildContainer('REGULAR\nHOLIDAY', 'Irregular'),
-              _buildContainer('WIRELESS\nHOTSPOT', '後で決める'),
               _buildContainer('MOBILE\nPAYMENT', 'Cash'),
               _buildContainer('SERVICE', 'Mobile Order'),
             ],
