@@ -61,15 +61,17 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
               // 取得したデータを表示するWidget
               return Stack(
                 children: [
-                  GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                      ),
-                      itemCount: beanList.length,
-                      itemBuilder: (context, index) {
-                        final bean = beanList[index];
-                        return products(bean['imagePath'], bean['productName'], bean['price'], bean['description']);
-                      }
+                  Scrollbar(
+                    child: GridView.builder(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ),
+                        itemCount: beanList.length,
+                        itemBuilder: (context, index) {
+                          final bean = beanList[index];
+                          return products(bean['imagePath'], bean['productName'], bean['price'], bean['description']);
+                        }
+                    ),
                   ),
                   _decideButton(),
                 ],
