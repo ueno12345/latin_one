@@ -4,6 +4,8 @@ LatinOne は，乃村研究室で開発している，コーヒー豆注文用�
 以下の画像は，LatinOne のホーム画面である．  
 ![ホーム画面](./images/home.png "ホーム画面")
 
+## Features
+
 LatinOne では，以下の機能が利用できる．  
 1. 商品の注文  
 2. 店舗の検索  
@@ -15,7 +17,7 @@ LatinOne では，以下の機能が利用できる．
 
 ![商品注文画面](./images/order.png "商品注文画面")
 
-商品を注文するには，以下3つの項目を入力する必要がある．  
+商品を注文するには，以下 3 つの項目を入力する必要がある．  
 1. 注文を依頼する店舗  
 2. 配送先情報
     * 氏名
@@ -44,11 +46,19 @@ LatinOne では，以下の機能が利用できる．
 ![お知らせ受取画面](./images/inbox.png "お知らせ受取画面")  
 お知らせ受取画面では，新商品や新店舗などのお知らせを確認できる．
 
+## Technologies
+LatinOne では，以下 2 つの技術を用いている．
+1. [Cloud Firestore](https://firebase.google.com/docs/firestore?hl=ja)  
+    データベースとして，Cloud Firestore を用いている．  
+    注文内容，店舗情報といった内容を Cloud Firestore に保存する．
+
+2. [Firebase Cloud Messaging (FCM)](https://firebase.google.com/docs/cloud-messaging?hl=ja)  
+    通知機能として，Firebase Cloud Messaging (FCM) を用いている．  
+
+
 # Requirements
 * flutter 3.19.5
 * AndroidStudio Jellyfish
-
-
 
 # Install and Setup
 - clone
@@ -71,5 +81,3 @@ LatinOne では，以下の機能が利用できる．
         ```
         $ flutter run
         ```
-
-- .env の説明
