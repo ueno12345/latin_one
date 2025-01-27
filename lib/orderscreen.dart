@@ -388,13 +388,14 @@ class _OrderScreenState extends State<OrderScreen> {
               onError: (e) => print("Error getting document: $e"),
             );
 
-            String result = await Navigator.push(
+            final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => PurchaseDetailScreen(shop: shop, name: deliveryaddress[0]['name'], nickname: deliveryaddress[1]['nickname'], address: deliveryaddress[3]['address'], cart: cart),
                 )
             );
-            if(result == "home"){
+
+            if(result != null && result == "home"){
               goRouter.go('/');
             }
           }
