@@ -17,7 +17,10 @@ final goRouter = GoRouter(
     ),
     GoRoute(
       path: '/Order',
-      builder: (context, state) => OrderScreen(),
+      builder: (context, state) {
+        final fcmToken = state.extra as String?;
+        return OrderScreen(fcmToken: fcmToken);
+      },
     ),
     GoRoute(
       path: '/Shops',

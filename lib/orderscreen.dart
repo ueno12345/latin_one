@@ -9,7 +9,8 @@ import 'router.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class OrderScreen extends StatefulWidget {
-  const OrderScreen({super.key});
+  final String? fcmToken;
+  const OrderScreen({super.key, required this.fcmToken});
 
   @override
   State<OrderScreen> createState() => _OrderScreenState();
@@ -365,10 +366,13 @@ class _OrderScreenState extends State<OrderScreen> {
                   (DocumentSnapshot doc) {
                     final orderIdMap = doc.data() as Map<String, dynamic>;
                     num orderId = orderIdMap['currentId'];
+                    var now = DateTime.now();
+                    var withoutMilliseconds = DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second);
                     // Order インスタンスを作成
                     var order = {
                       orderId.toString() : {
-                        'order-time' : DateTime.now(),
+                        'token' : "${widget.fcmToken}",
+                        'order-time' : withoutMilliseconds,  // ミリ秒なしで日時を保存
                         '氏名' : deliveryaddress[0]['name'].toString(),
                         'ニックネーム' : deliveryaddress[1]['nickname'].toString(),
                         'mail-address' : deliveryaddress[2]['mail'].toString(),

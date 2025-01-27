@@ -33,7 +33,6 @@ void main() async{
   messagingInstance.requestPermission();
 
   final fcmToken = await messagingInstance.getToken();
-  debugPrint('FCM TOKEN: $fcmToken');
 
   subscribeToTopic('information');
   subscribeToTopic('product');
@@ -61,11 +60,13 @@ void main() async{
   // final message = await FirebaseMessaging.instance.getInitialMessage();
   // // 取得したmessageを利用した処理などを記載する
 
-  runApp(const MyApp());
+  runApp(MyApp(fcmToken: fcmToken));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String? fcmToken;
+
+  const MyApp({super.key, this.fcmToken});
 
   // This widget is the root of your application.
   @override
@@ -76,14 +77,15 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'LatinOne'),
+      home: MyHomePage(title: 'LatinOne', fcmToken: fcmToken),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title, required this.fcmToken});
   final String title;
+  final String? fcmToken;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -252,7 +254,7 @@ class _MyHomePageState extends State<MyHomePage> {
         goRouter.go('/');
         break;
       case 1:
-        goRouter.go('/Order');
+        goRouter.go('/Order', extra: widget.fcmToken);
         break;
       case 2:
         goRouter.go('/Shops');
