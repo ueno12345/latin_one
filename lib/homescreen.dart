@@ -19,8 +19,8 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             _buildContainer('image2.jpg', 'Shops', 'SEARCH SHOPS', '注文可能な店舗を検索', '検索する'),
             _buildContainer('image3.jpg', 'Order', 'MOBILE ORDER', 'レジに並ばずお店で受け取り', 'オーダーする'),
-            _buildContainer('image4.jpg', 'New Products', "What's new", 'Daily Offering', 'もっと見る'),
-            _buildContainer('image5.jpg', 'Products', 'Check Products', '商品一覧を確認', 'もっと見る'),
+            //_buildContainer('image4.jpg', 'New Products', "What's new", 'Daily Offering', 'もっと見る'),
+            //_buildContainer('image5.jpg', 'Products', 'Check Products', '商品一覧を確認', 'もっと見る'),
             _buildContainer('image6.jpg', 'Inbox', 'New information', '新しい情報', 'もっと見る'),
           ]
         )
